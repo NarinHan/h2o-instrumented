@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2020 Fastly, Inc.
  *
@@ -52,7 +57,10 @@ static void swap_cids(quicly_local_cid_t *a, quicly_local_cid_t *b)
  */
 static void do_mark_pending(quicly_local_cid_set_t *set, size_t idx)
 {
+    {  // Begin logged block
     set->cids[idx].state = QUICLY_LOCAL_CID_STATE_PENDING;
+    LOG_VAR_INT(set->cids[idx].state); // Auto-logged
+    }  // End logged block
     for (size_t j = 0; j < idx; j++) {
         if (set->cids[j].state != QUICLY_LOCAL_CID_STATE_PENDING) {
             swap_cids(&set->cids[idx], &set->cids[j]);
@@ -70,7 +78,10 @@ static void do_mark_delivered(quicly_local_cid_set_t *set, size_t idx)
             idx++;
         }
     }
+    {  // Begin logged block
     set->cids[idx].state = QUICLY_LOCAL_CID_STATE_DELIVERED;
+    LOG_VAR_INT(set->cids[idx].state); // Auto-logged
+    }  // End logged block
 }
 
 void quicly_local_cid_init_set(quicly_local_cid_set_t *set, quicly_cid_encryptor_t *encryptor,
@@ -107,7 +118,10 @@ int quicly_local_cid_set_size(quicly_local_cid_set_t *set, size_t size)
     assert(set->_size <= size);
 
     for (size_t i = set->_size; i < size; i++)
-        set->cids[i].state = QUICLY_LOCAL_CID_STATE_IDLE;
+    {  // Begin logged block
+    set->cids[i].state = QUICLY_LOCAL_CID_STATE_IDLE;
+    LOG_VAR_INT(set->cids[i].state); // Auto-logged
+    }  // End logged block
 
     set->_size = size;
 
@@ -134,7 +148,10 @@ void quicly_local_cid_on_sent(quicly_local_cid_set_t *set, size_t num_sent)
     /* first, mark the first `num_sent` CIDs as INFLIGHT */
     for (size_t i = 0; i < num_sent; i++) {
         assert(set->cids[i].state == QUICLY_LOCAL_CID_STATE_PENDING);
-        set->cids[i].state = QUICLY_LOCAL_CID_STATE_INFLIGHT;
+    {  // Begin logged block
+    set->cids[i].state = QUICLY_LOCAL_CID_STATE_INFLIGHT;
+    LOG_VAR_INT(set->cids[i].state); // Auto-logged
+    }  // End logged block
     }
 
     /* then move the remaining PENDING CIDs (if any) to the front of the array */
@@ -206,7 +223,10 @@ int quicly_local_cid_retire(quicly_local_cid_set_t *set, uint64_t sequence, int 
         return QUICLY_TRANSPORT_ERROR_PROTOCOL_VIOLATION;
 
     /* retire given CID */
+    {  // Begin logged block
     set->cids[retired_at].state = QUICLY_LOCAL_CID_STATE_IDLE;
+    LOG_VAR_INT(set->cids[retired_at].state); // Auto-logged
+    }  // End logged block
     set->cids[retired_at].sequence = UINT64_MAX;
 
     /* move following PENDING CIDs to front */

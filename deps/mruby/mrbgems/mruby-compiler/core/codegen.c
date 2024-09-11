@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** codegen.c - mruby code generator
 **
@@ -2982,7 +2987,10 @@ codegen(codegen_scope *s, node *tree, int val)
     {
       codegen_scope *s2 = s;
       int lv = 0;
-      int n = 0, nk = 0, st = 0;
+    {  // Begin logged block
+    int n = 0, nk = 0, st = 0;
+    LOG_VAR_INT(st); // Auto-logged
+    }  // End logged block
 
       push();
       while (!s2->mscope) {
@@ -2995,7 +3003,10 @@ codegen(codegen_scope *s, node *tree, int val)
         if (args) {
           st = n = gen_values(s, args, VAL, 14);
           if (n < 0) {
-            st = 1; n = 15;
+    {  // Begin logged block
+    st = 1; n = 15;
+    LOG_VAR_INT(st); // Auto-logged
+    }  // End logged block
             push();
           }
         }

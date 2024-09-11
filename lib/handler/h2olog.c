@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2022 Fastly, Inc, Goro Fuji, Kazuho Oku
  *

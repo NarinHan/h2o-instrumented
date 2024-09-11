@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2016 Justin Zhu
  *
@@ -135,7 +140,10 @@ static void on_setup_ostream(h2o_filter_t *self, h2o_req_t *req, h2o_ostream_t *
     throttle->req = req;
     throttle->bytes_per_sec = bytes_per_sec;
     memset(&throttle->state.bufs, 0, sizeof(throttle->state.bufs));
+    {  // Begin logged block
     throttle->state.stream_state = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(throttle->state.stream_state); // Auto-logged
+    }  // End logged block
 
     { /* reduce `preferred_chunk_size` so that we'd be sending one chunk every 100ms */
         size_t chunk_size = bytes_per_sec / 10;

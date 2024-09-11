@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Fastly, Inc.
  *
@@ -984,13 +989,22 @@ static int on_config_send_informational(h2o_configurator_command_t *cmd, h2o_con
 {
     switch (h2o_configurator_get_one_of(cmd, node, "except-h1,none,all")) {
     case 0:
-        ctx->globalconf->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_EXCEPT_H1;
+    {  // Begin logged block
+    ctx->globalconf->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_EXCEPT_H1;
+    LOG_VAR_INT(ctx->globalconf->send_informational_mode); // Auto-logged
+    }  // End logged block
         break;
     case 1:
-        ctx->globalconf->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_NONE;
+    {  // Begin logged block
+    ctx->globalconf->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_NONE;
+    LOG_VAR_INT(ctx->globalconf->send_informational_mode); // Auto-logged
+    }  // End logged block
         break;
     case 2:
-        ctx->globalconf->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_ALL;
+    {  // Begin logged block
+    ctx->globalconf->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_ALL;
+    LOG_VAR_INT(ctx->globalconf->send_informational_mode); // Auto-logged
+    }  // End logged block
         break;
     default:
         return -1;

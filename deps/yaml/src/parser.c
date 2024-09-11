@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 
 /*
  * The parser implements the following grammar:
@@ -322,7 +327,10 @@ yaml_parser_parse_stream_start(yaml_parser_t *parser, yaml_event_t *event)
                 "did not find expected <stream-start>", token->start_mark);
     }
 
+    {  // Begin logged block
     parser->state = YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
     STREAM_START_EVENT_INIT(*event, token->data.stream_start.encoding,
             token->start_mark, token->start_mark);
     SKIP_TOKEN(parser);
@@ -374,7 +382,10 @@ yaml_parser_parse_document_start(yaml_parser_t *parser, yaml_event_t *event,
             return 0;
         if (!PUSH(parser, parser->states, YAML_PARSE_DOCUMENT_END_STATE))
             return 0;
-        parser->state = YAML_PARSE_BLOCK_NODE_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_NODE_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
         DOCUMENT_START_EVENT_INIT(*event, NULL, NULL, NULL, 1,
                 token->start_mark, token->start_mark);
         return 1;
@@ -398,7 +409,10 @@ yaml_parser_parse_document_start(yaml_parser_t *parser, yaml_event_t *event,
         }
         if (!PUSH(parser, parser->states, YAML_PARSE_DOCUMENT_END_STATE))
             goto error;
-        parser->state = YAML_PARSE_DOCUMENT_CONTENT_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_DOCUMENT_CONTENT_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
         end_mark = token->end_mark;
         DOCUMENT_START_EVENT_INIT(*event, version_directive,
                 tag_directives.start, tag_directives.end, 0,
@@ -413,7 +427,10 @@ yaml_parser_parse_document_start(yaml_parser_t *parser, yaml_event_t *event,
 
     else
     {
-        parser->state = YAML_PARSE_END_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_END_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
         STREAM_END_EVENT_INIT(*event, token->start_mark, token->end_mark);
         SKIP_TOKEN(parser);
         return 1;
@@ -490,7 +507,10 @@ yaml_parser_parse_document_end(yaml_parser_t *parser, yaml_event_t *event)
         yaml_free(tag_directive.prefix);
     }
 
+    {  // Begin logged block
     parser->state = YAML_PARSE_DOCUMENT_START_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
     DOCUMENT_END_EVENT_INIT(*event, implicit, start_mark, end_mark);
 
     return 1;
@@ -631,7 +651,10 @@ yaml_parser_parse_node(yaml_parser_t *parser, yaml_event_t *event,
         implicit = (!tag || !*tag);
         if (indentless_sequence && token->type == YAML_BLOCK_ENTRY_TOKEN) {
             end_mark = token->end_mark;
-            parser->state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
             SEQUENCE_START_EVENT_INIT(*event, anchor, tag, implicit,
                     YAML_BLOCK_SEQUENCE_STYLE, start_mark, end_mark);
             return 1;
@@ -658,28 +681,40 @@ yaml_parser_parse_node(yaml_parser_t *parser, yaml_event_t *event,
             }
             else if (token->type == YAML_FLOW_SEQUENCE_START_TOKEN) {
                 end_mark = token->end_mark;
-                parser->state = YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
                 SEQUENCE_START_EVENT_INIT(*event, anchor, tag, implicit,
                         YAML_FLOW_SEQUENCE_STYLE, start_mark, end_mark);
                 return 1;
             }
             else if (token->type == YAML_FLOW_MAPPING_START_TOKEN) {
                 end_mark = token->end_mark;
-                parser->state = YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
                 MAPPING_START_EVENT_INIT(*event, anchor, tag, implicit,
                         YAML_FLOW_MAPPING_STYLE, start_mark, end_mark);
                 return 1;
             }
             else if (block && token->type == YAML_BLOCK_SEQUENCE_START_TOKEN) {
                 end_mark = token->end_mark;
-                parser->state = YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
                 SEQUENCE_START_EVENT_INIT(*event, anchor, tag, implicit,
                         YAML_BLOCK_SEQUENCE_STYLE, start_mark, end_mark);
                 return 1;
             }
             else if (block && token->type == YAML_BLOCK_MAPPING_START_TOKEN) {
                 end_mark = token->end_mark;
-                parser->state = YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
                 MAPPING_START_EVENT_INIT(*event, anchor, tag, implicit,
                         YAML_BLOCK_MAPPING_STYLE, start_mark, end_mark);
                 return 1;
@@ -752,7 +787,10 @@ yaml_parser_parse_block_sequence_entry(yaml_parser_t *parser,
             return yaml_parser_parse_node(parser, event, 1, 0);
         }
         else {
-            parser->state = YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
             return yaml_parser_process_empty_scalar(parser, event, mark);
         }
     }
@@ -805,7 +843,10 @@ yaml_parser_parse_indentless_sequence_entry(yaml_parser_t *parser,
             return yaml_parser_parse_node(parser, event, 1, 0);
         }
         else {
-            parser->state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
             return yaml_parser_process_empty_scalar(parser, event, mark);
         }
     }
@@ -861,7 +902,10 @@ yaml_parser_parse_block_mapping_key(yaml_parser_t *parser,
             return yaml_parser_parse_node(parser, event, 1, 1);
         }
         else {
-            parser->state = YAML_PARSE_BLOCK_MAPPING_VALUE_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_MAPPING_VALUE_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
             return yaml_parser_process_empty_scalar(parser, event, mark);
         }
     }
@@ -919,14 +963,20 @@ yaml_parser_parse_block_mapping_value(yaml_parser_t *parser,
             return yaml_parser_parse_node(parser, event, 1, 1);
         }
         else {
-            parser->state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
             return yaml_parser_process_empty_scalar(parser, event, mark);
         }
     }
 
     else
     {
-        parser->state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
         return yaml_parser_process_empty_scalar(parser, event, token->start_mark);
     }
 }
@@ -977,7 +1027,10 @@ yaml_parser_parse_flow_sequence_entry(yaml_parser_t *parser,
         }
 
         if (token->type == YAML_KEY_TOKEN) {
-            parser->state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
             MAPPING_START_EVENT_INIT(*event, NULL, NULL,
                     1, YAML_FLOW_MAPPING_STYLE,
                     token->start_mark, token->end_mark);
@@ -1025,7 +1078,10 @@ yaml_parser_parse_flow_sequence_entry_mapping_key(yaml_parser_t *parser,
     else {
         yaml_mark_t mark = token->end_mark;
         SKIP_TOKEN(parser);
-        parser->state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
         return yaml_parser_process_empty_scalar(parser, event, mark);
     }
 }
@@ -1057,7 +1113,10 @@ yaml_parser_parse_flow_sequence_entry_mapping_value(yaml_parser_t *parser,
             return yaml_parser_parse_node(parser, event, 0, 0);
         }
     }
+    {  // Begin logged block
     parser->state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
     return yaml_parser_process_empty_scalar(parser, event, token->start_mark);
 }
 
@@ -1076,7 +1135,10 @@ yaml_parser_parse_flow_sequence_entry_mapping_end(yaml_parser_t *parser,
     token = PEEK_TOKEN(parser);
     if (!token) return 0;
 
+    {  // Begin logged block
     parser->state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
 
     MAPPING_END_EVENT_INIT(*event, token->start_mark, token->start_mark);
     return 1;
@@ -1140,7 +1202,10 @@ yaml_parser_parse_flow_mapping_key(yaml_parser_t *parser,
                 return yaml_parser_parse_node(parser, event, 0, 0);
             }
             else {
-                parser->state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
                 return yaml_parser_process_empty_scalar(parser, event,
                         token->start_mark);
             }
@@ -1176,7 +1241,10 @@ yaml_parser_parse_flow_mapping_value(yaml_parser_t *parser,
     if (!token) return 0;
 
     if (empty) {
-        parser->state = YAML_PARSE_FLOW_MAPPING_KEY_STATE;
+    {  // Begin logged block
+    parser->state = YAML_PARSE_FLOW_MAPPING_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
         return yaml_parser_process_empty_scalar(parser, event,
                 token->start_mark);
     }
@@ -1194,7 +1262,10 @@ yaml_parser_parse_flow_mapping_value(yaml_parser_t *parser,
         }
     }
 
+    {  // Begin logged block
     parser->state = YAML_PARSE_FLOW_MAPPING_KEY_STATE;
+    LOG_VAR_INT(parser->state); // Auto-logged
+    }  // End logged block
     return yaml_parser_process_empty_scalar(parser, event, token->start_mark);
 }
 

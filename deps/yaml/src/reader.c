@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 
 #include "yaml_private.h"
 
@@ -63,24 +68,36 @@ yaml_parser_determine_encoding(yaml_parser_t *parser)
 
     if (parser->raw_buffer.last - parser->raw_buffer.pointer >= 2
             && !memcmp(parser->raw_buffer.pointer, BOM_UTF16LE, 2)) {
-        parser->encoding = YAML_UTF16LE_ENCODING;
+    {  // Begin logged block
+    parser->encoding = YAML_UTF16LE_ENCODING;
+    LOG_VAR_INT(parser->encoding); // Auto-logged
+    }  // End logged block
         parser->raw_buffer.pointer += 2;
         parser->offset += 2;
     }
     else if (parser->raw_buffer.last - parser->raw_buffer.pointer >= 2
             && !memcmp(parser->raw_buffer.pointer, BOM_UTF16BE, 2)) {
-        parser->encoding = YAML_UTF16BE_ENCODING;
+    {  // Begin logged block
+    parser->encoding = YAML_UTF16BE_ENCODING;
+    LOG_VAR_INT(parser->encoding); // Auto-logged
+    }  // End logged block
         parser->raw_buffer.pointer += 2;
         parser->offset += 2;
     }
     else if (parser->raw_buffer.last - parser->raw_buffer.pointer >= 3
             && !memcmp(parser->raw_buffer.pointer, BOM_UTF8, 3)) {
-        parser->encoding = YAML_UTF8_ENCODING;
+    {  // Begin logged block
+    parser->encoding = YAML_UTF8_ENCODING;
+    LOG_VAR_INT(parser->encoding); // Auto-logged
+    }  // End logged block
         parser->raw_buffer.pointer += 3;
         parser->offset += 3;
     }
     else {
-        parser->encoding = YAML_UTF8_ENCODING;
+    {  // Begin logged block
+    parser->encoding = YAML_UTF8_ENCODING;
+    LOG_VAR_INT(parser->encoding); // Auto-logged
+    }  // End logged block
     }
 
     return 1;

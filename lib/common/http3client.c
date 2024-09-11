@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2018 Fastly, Kazuho Oku
  *
@@ -394,7 +399,10 @@ static void notify_response_error(struct st_h2o_http3client_req_t *req, const ch
     default:
         break;
     }
+    {  // Begin logged block
     req->response_state = H2O_HTTP3CLIENT_RESPONSE_STATE_CLOSED;
+    LOG_VAR_INT(req->response_state); // Auto-logged
+    }  // End logged block
 }
 
 static int call_on_body(struct st_h2o_http3client_req_t *req, const char *errstr)
@@ -403,7 +411,10 @@ static int call_on_body(struct st_h2o_http3client_req_t *req, const char *errstr
 
     int ret = req->super._cb.on_body(&req->super, errstr, NULL, 0);
     if (errstr != NULL)
-        req->response_state = H2O_HTTP3CLIENT_RESPONSE_STATE_CLOSED;
+    {  // Begin logged block
+    req->response_state = H2O_HTTP3CLIENT_RESPONSE_STATE_CLOSED;
+    LOG_VAR_INT(req->response_state); // Auto-logged
+    }  // End logged block
 
     return ret;
 }
@@ -563,7 +574,10 @@ static int handle_input_expect_headers(struct st_h2o_http3client_req_t *req, con
         on_head.forward_datagram.read_ = &req->on_read_datagrams;
     }
     req->super._cb.on_body = req->super._cb.on_head(&req->super, frame_is_eos ? h2o_httpclient_error_is_eos : NULL, &on_head);
+    {  // Begin logged block
     req->response_state = H2O_HTTP3CLIENT_RESPONSE_STATE_BODY;
+    LOG_VAR_INT(req->response_state); // Auto-logged
+    }  // End logged block
     if (req->super._cb.on_body == NULL)
         return frame_is_eos ? 0 : H2O_HTTP3_ERROR_INTERNAL;
 

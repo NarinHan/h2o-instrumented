@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 
 #include "yaml_private.h"
 
@@ -503,7 +508,10 @@ yaml_emitter_emit_stream_start(yaml_emitter_t *emitter,
         }
 
         if (!emitter->encoding) {
-            emitter->encoding = YAML_UTF8_ENCODING;
+    {  // Begin logged block
+    emitter->encoding = YAML_UTF8_ENCODING;
+    LOG_VAR_INT(emitter->encoding); // Auto-logged
+    }  // End logged block
         }
 
         if (emitter->best_indent < 2 || emitter->best_indent > 9) {
@@ -520,7 +528,10 @@ yaml_emitter_emit_stream_start(yaml_emitter_t *emitter,
         }
 
         if (!emitter->line_break) {
-            emitter->line_break = YAML_LN_BREAK;
+    {  // Begin logged block
+    emitter->line_break = YAML_LN_BREAK;
+    LOG_VAR_INT(emitter->line_break); // Auto-logged
+    }  // End logged block
         }
 
         emitter->indent = -1;
@@ -535,7 +546,10 @@ yaml_emitter_emit_stream_start(yaml_emitter_t *emitter,
                 return 0;
         }
 
-        emitter->state = YAML_EMIT_FIRST_DOCUMENT_START_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_FIRST_DOCUMENT_START_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
 
         return 1;
     }
@@ -650,7 +664,10 @@ yaml_emitter_emit_document_start(yaml_emitter_t *emitter,
             }
         }
 
-        emitter->state = YAML_EMIT_DOCUMENT_CONTENT_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_DOCUMENT_CONTENT_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
 
         emitter->open_ended = 0;
         return 1;
@@ -674,7 +691,10 @@ yaml_emitter_emit_document_start(yaml_emitter_t *emitter,
         if (!yaml_emitter_flush(emitter))
             return 0;
 
-        emitter->state = YAML_EMIT_END_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_END_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
 
         return 1;
     }
@@ -721,7 +741,10 @@ yaml_emitter_emit_document_end(yaml_emitter_t *emitter,
         if (!yaml_emitter_flush(emitter))
             return 0;
 
-        emitter->state = YAML_EMIT_DOCUMENT_START_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_DOCUMENT_START_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
 
         while (!STACK_EMPTY(emitter, emitter->tag_directives)) {
             yaml_tag_directive_t tag_directive = POP(emitter,
@@ -1068,10 +1091,16 @@ yaml_emitter_emit_sequence_start(yaml_emitter_t *emitter, yaml_event_t *event)
     if (emitter->flow_level || emitter->canonical
             || event->data.sequence_start.style == YAML_FLOW_SEQUENCE_STYLE
             || yaml_emitter_check_empty_sequence(emitter)) {
-        emitter->state = YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
     }
     else {
-        emitter->state = YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
     }
 
     return 1;
@@ -1092,10 +1121,16 @@ yaml_emitter_emit_mapping_start(yaml_emitter_t *emitter, yaml_event_t *event)
     if (emitter->flow_level || emitter->canonical
             || event->data.mapping_start.style == YAML_FLOW_MAPPING_STYLE
             || yaml_emitter_check_empty_mapping(emitter)) {
-        emitter->state = YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
     }
     else {
-        emitter->state = YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE;
+    {  // Begin logged block
+    emitter->state = YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE;
+    LOG_VAR_INT(emitter->state); // Auto-logged
+    }  // End logged block
     }
 
     return 1;
@@ -1207,37 +1242,61 @@ yaml_emitter_select_scalar_style(yaml_emitter_t *emitter, yaml_event_t *event)
     }
 
     if (style == YAML_ANY_SCALAR_STYLE)
-        style = YAML_PLAIN_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_PLAIN_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
 
     if (emitter->canonical)
-        style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
 
     if (emitter->simple_key_context && emitter->scalar_data.multiline)
-        style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
 
     if (style == YAML_PLAIN_SCALAR_STYLE)
     {
         if ((emitter->flow_level && !emitter->scalar_data.flow_plain_allowed)
                 || (!emitter->flow_level && !emitter->scalar_data.block_plain_allowed))
-            style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
         if (!emitter->scalar_data.length
                 && (emitter->flow_level || emitter->simple_key_context))
-            style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
         if (no_tag && !event->data.scalar.plain_implicit)
-            style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
     }
 
     if (style == YAML_SINGLE_QUOTED_SCALAR_STYLE)
     {
         if (!emitter->scalar_data.single_quoted_allowed)
-            style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
     }
 
     if (style == YAML_LITERAL_SCALAR_STYLE || style == YAML_FOLDED_SCALAR_STYLE)
     {
         if (!emitter->scalar_data.block_allowed
                 || emitter->flow_level || emitter->simple_key_context)
-            style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
     }
 
     if (no_tag && !event->data.scalar.quoted_implicit

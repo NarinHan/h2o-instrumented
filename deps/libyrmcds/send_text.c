@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 // (C) 2016 Cybozu
 
 #include "yrmcds_text.h"

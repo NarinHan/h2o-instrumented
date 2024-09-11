@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015-2016 DeNA Co., Ltd., Kazuho Oku
  *
@@ -52,7 +57,10 @@ void h2o_mruby_sender_do_send(h2o_mruby_generator_t *generator, h2o_sendvec_t *b
     if (state == H2O_SEND_STATE_FINAL) {
         if (!(sender->bytes_left == 0 || sender->bytes_left == SIZE_MAX)) {
             /* send error if the length of content served is smaller than content-length header value */
-            state = H2O_SEND_STATE_ERROR;
+    {  // Begin logged block
+    state = H2O_SEND_STATE_ERROR;
+    LOG_VAR_INT(state); // Auto-logged
+    }  // End logged block
         }
     }
 
@@ -73,11 +81,17 @@ void h2o_mruby_sender_do_send_buffer(h2o_mruby_generator_t *generator, h2o_doubl
     if (is_final && buf.len == db->buf->size && (*input)->size == 0) {
         if (buf.len == 0)
             --bufcnt;
-        send_state = H2O_SEND_STATE_FINAL;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_FINAL;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     } else {
         if (buf.len == 0)
             return;
-        send_state = H2O_SEND_STATE_IN_PROGRESS;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     }
 
     h2o_sendvec_t vec;

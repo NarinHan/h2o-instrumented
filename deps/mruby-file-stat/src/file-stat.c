@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /**
  * original is https://github.com/ruby/ruby/blob/trunk/file.c
  */

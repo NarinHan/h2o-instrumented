@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2018 Ichito Nagata, Fastly, Inc.
  *
@@ -941,7 +946,10 @@ static void close_connection_now(struct st_h2o_http2client_conn_t *conn)
 static int close_connection_if_necessary(struct st_h2o_http2client_conn_t *conn)
 {
     if (conn->state == H2O_HTTP2CLIENT_CONN_STATE_HALF_CLOSED && conn->super.num_streams == 0)
-        conn->state = H2O_HTTP2CLIENT_CONN_STATE_IS_CLOSING;
+    {  // Begin logged block
+    conn->state = H2O_HTTP2CLIENT_CONN_STATE_IS_CLOSING;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     if (conn->state == H2O_HTTP2CLIENT_CONN_STATE_IS_CLOSING) {
         close_connection_now(conn);
         return 1;
@@ -951,7 +959,10 @@ static int close_connection_if_necessary(struct st_h2o_http2client_conn_t *conn)
 
 static int close_connection(struct st_h2o_http2client_conn_t *conn)
 {
+    {  // Begin logged block
     conn->state = H2O_HTTP2CLIENT_CONN_STATE_IS_CLOSING;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     h2o_socket_read_stop(conn->super.sock);
 
     if (conn->output.buf_in_flight != NULL || h2o_timer_is_linked(&conn->output.defer_timeout)) {
@@ -970,7 +981,10 @@ static void enqueue_goaway(struct st_h2o_http2client_conn_t *conn, int errnum, h
 
     h2o_http2_encode_goaway_frame(&conn->output.buf, 0, errnum, additional_data);
     request_write(conn);
+    {  // Begin logged block
     conn->state = H2O_HTTP2CLIENT_CONN_STATE_HALF_CLOSED;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
 
     /* stop opening new streams */
     if (h2o_linklist_is_linked(&conn->super.link))
@@ -1283,7 +1297,10 @@ static struct st_h2o_http2client_conn_t *create_connection(h2o_httpclient_ctx_t 
 
     conn->super.ctx = ctx;
     conn->super.sock = sock;
+    {  // Begin logged block
     conn->state = H2O_HTTP2CLIENT_CONN_STATE_OPEN;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     conn->peer_settings = H2O_HTTP2_SETTINGS_DEFAULT;
     conn->streams = kh_init(stream);
     h2o_url_copy(NULL, &conn->super.origin_url, origin_url);

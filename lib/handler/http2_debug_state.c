@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2016 DeNA Co., Ltd., Ichito Nagata
  *
@@ -46,7 +51,10 @@ static int on_req(h2o_handler_t *_self, h2o_req_t *req)
     conn_flow_out.base = h2o_mem_alloc_pool(&req->pool, char, sizeof(H2O_INT64_LONGEST_STR));
     conn_flow_out.len = sprintf(conn_flow_out.base, "%zd", debug_state->conn_flow_out);
 
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CONTENT_TYPE, NULL, H2O_STRLIT("application/json; charset=utf-8"));
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CACHE_CONTROL, NULL, H2O_STRLIT("no-cache, no-store"));
     h2o_add_header_by_str(&req->pool, &req->res.headers, H2O_STRLIT("conn-flow-in"), 0, NULL, conn_flow_in.base, conn_flow_in.len);

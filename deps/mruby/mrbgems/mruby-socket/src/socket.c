@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** socket.c - Socket module
 **
@@ -410,7 +415,10 @@ mrb_basicsocket_setnonblock(mrb_state *mrb, mrb_value self)
   int fd, flags;
   mrb_bool nonblocking;
 #ifdef _WIN32
-  u_long mode = 1;
+    {  // Begin logged block
+    u_long mode = 1;
+    LOG_VAR_INT(mode); // Auto-logged
+    }  // End logged block
 #endif
 
   mrb_get_args(mrb, "b", &nonblocking);
@@ -754,7 +762,10 @@ mrb_tcpsocket_allocate(mrb_state *mrb, mrb_value klass)
   enum mrb_vtype ttype = MRB_INSTANCE_TT(c);
 
   /* copied from mrb_instance_alloc() */
-  if (ttype == 0) ttype = MRB_TT_OBJECT;
+    {  // Begin logged block
+    if (ttype == 0) ttype = MRB_TT_OBJECT;
+    LOG_VAR_INT(ttype); // Auto-logged
+    }  // End logged block
   return mrb_obj_value((struct RObject*)mrb_obj_alloc(mrb, ttype, c));
 }
 

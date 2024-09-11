@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** vm.c - virtual machine for mruby
 **
@@ -2199,7 +2204,10 @@ RETRY_TRY_BLOCK:
               else {
                 struct mrb_context *c = mrb->c;
 
-                c->status = MRB_FIBER_TERMINATED;
+    {  // Begin logged block
+    c->status = MRB_FIBER_TERMINATED;
+    LOG_VAR_INT(c->status); // Auto-logged
+    }  // End logged block
                 mrb->c = c->prev;
                 c->prev = NULL;
                 goto L_RAISE;
@@ -2298,9 +2306,15 @@ RETRY_TRY_BLOCK:
             }
             CHECKPOINT_END(RBREAK_TAG_RETURN_TOPLEVEL);
             /* automatic yield at the end */
-            c->status = MRB_FIBER_TERMINATED;
+    {  // Begin logged block
+    c->status = MRB_FIBER_TERMINATED;
+    LOG_VAR_INT(c->status); // Auto-logged
+    }  // End logged block
             mrb->c = c->prev;
-            mrb->c->status = MRB_FIBER_RUNNING;
+    {  // Begin logged block
+    mrb->c->status = MRB_FIBER_RUNNING;
+    LOG_VAR_INT(mrb->c->status); // Auto-logged
+    }  // End logged block
             c->prev = NULL;
             if (c->vmexec) {
               mrb_gc_arena_restore(mrb, ai);

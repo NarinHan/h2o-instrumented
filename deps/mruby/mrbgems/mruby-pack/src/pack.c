@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  ** pack.c - Array#pack, String#unpack
  */
@@ -1106,69 +1111,105 @@ read_tmpl(mrb_state *mrb, struct tmpl *tmpl, enum pack_dir *dirp, enum pack_type
 alias:
   switch (t) {
   case 'A':
+    {  // Begin logged block
     dir = PACK_DIR_STR;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_WIDTH | PACK_FLAG_COUNT2;
     break;
   case 'a':
+    {  // Begin logged block
     dir = PACK_DIR_STR;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_WIDTH | PACK_FLAG_COUNT2 | PACK_FLAG_a;
     break;
   case 'C':
+    {  // Begin logged block
     dir = PACK_DIR_CHAR;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 1;
     break;
   case 'c':
+    {  // Begin logged block
     dir = PACK_DIR_CHAR;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 1;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'D': case 'd':
+    {  // Begin logged block
     dir = PACK_DIR_DOUBLE;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_FLOAT;
     size = 8;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'F': case 'f':
+    {  // Begin logged block
     dir = PACK_DIR_FLOAT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_FLOAT;
     size = 4;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'E':
+    {  // Begin logged block
     dir = PACK_DIR_DOUBLE;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_FLOAT;
     size = 8;
     flags |= PACK_FLAG_SIGNED | PACK_FLAG_LT;
     break;
   case 'e':
+    {  // Begin logged block
     dir = PACK_DIR_FLOAT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_FLOAT;
     size = 4;
     flags |= PACK_FLAG_SIGNED | PACK_FLAG_LT;
     break;
   case 'G':
+    {  // Begin logged block
     dir = PACK_DIR_DOUBLE;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_FLOAT;
     size = 8;
     flags |= PACK_FLAG_SIGNED | PACK_FLAG_GT;
     break;
   case 'g':
+    {  // Begin logged block
     dir = PACK_DIR_FLOAT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_FLOAT;
     size = 4;
     flags |= PACK_FLAG_SIGNED | PACK_FLAG_GT;
     break;
   case 'H':
+    {  // Begin logged block
     dir = PACK_DIR_HEX;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_COUNT2;
     break;
   case 'h':
+    {  // Begin logged block
     dir = PACK_DIR_HEX;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_COUNT2 | PACK_FLAG_LSB;
     break;
@@ -1191,95 +1232,149 @@ alias:
     }
     break;
   case 'L':
+    {  // Begin logged block
     dir = PACK_DIR_LONG;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 4;
     break;
   case 'l':
+    {  // Begin logged block
     dir = PACK_DIR_LONG;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 4;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'w':
+    {  // Begin logged block
     dir = PACK_DIR_BER;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'm':
+    {  // Begin logged block
     dir = PACK_DIR_BASE64;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_WIDTH | PACK_FLAG_COUNT2;
     break;
   case 'M':
+    {  // Begin logged block
     dir = PACK_DIR_QENC;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_WIDTH | PACK_FLAG_COUNT2;
     break;
   case 'N':  /* = "L>" */
+    {  // Begin logged block
     dir = PACK_DIR_LONG;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 4;
     flags |= PACK_FLAG_GT;
     break;
   case 'n':  /* = "S>" */
+    {  // Begin logged block
     dir = PACK_DIR_SHORT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 2;
     flags |= PACK_FLAG_GT;
     break;
   case 'Q':
+    {  // Begin logged block
     dir = PACK_DIR_QUAD;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 8;
     break;
   case 'q':
+    {  // Begin logged block
     dir = PACK_DIR_QUAD;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 8;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'S':
+    {  // Begin logged block
     dir = PACK_DIR_SHORT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 2;
     break;
   case 's':
+    {  // Begin logged block
     dir = PACK_DIR_SHORT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 2;
     flags |= PACK_FLAG_SIGNED;
     break;
   case 'U':
+    {  // Begin logged block
     dir = PACK_DIR_UTF8;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     break;
   case 'V':  /* = "L<" */
+    {  // Begin logged block
     dir = PACK_DIR_LONG;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 4;
     flags |= PACK_FLAG_LT;
     break;
   case 'v':  /* = "S<" */
+    {  // Begin logged block
     dir = PACK_DIR_SHORT;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_INTEGER;
     size = 2;
     flags |= PACK_FLAG_LT;
     break;
   case 'x':
+    {  // Begin logged block
     dir = PACK_DIR_NUL;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_NONE;
     break;
   case 'X':
+    {  // Begin logged block
     dir = PACK_DIR_BACK;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_NONE;
     break;
   case '@':
+    {  // Begin logged block
     dir = PACK_DIR_ABS;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_NONE;
     break;
   case 'Z':
+    {  // Begin logged block
     dir = PACK_DIR_STR;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_STRING;
     flags |= PACK_FLAG_WIDTH | PACK_FLAG_COUNT2 | PACK_FLAG_Z;
     break;
@@ -1288,7 +1383,10 @@ alias:
     mrb_raisef(mrb, E_ARGUMENT_ERROR, "%c is not supported", (char)t);
     break;
   default:
+    {  // Begin logged block
     dir = PACK_DIR_INVALID;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
     type = PACK_TYPE_NONE;
     break;
   }

@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd.
  *
@@ -192,7 +197,10 @@ void h2o_config_init(h2o_globalconf_t *config)
     config->proxy.emit_x_forwarded_headers = 1;
     config->proxy.emit_via_header = 1;
     config->proxy.emit_missing_date_header = 1;
+    {  // Begin logged block
     config->proxy.zerocopy = H2O_PROXY_ZEROCOPY_ENABLED;
+    LOG_VAR_INT(config->proxy.zerocopy); // Auto-logged
+    }  // End logged block
     config->http2.max_streams = H2O_HTTP2_SETTINGS_HOST_MAX_CONCURRENT_STREAMS;
     config->http2.max_concurrent_requests_per_connection = H2O_HTTP2_SETTINGS_HOST_MAX_CONCURRENT_STREAMS;
     config->http2.max_concurrent_streaming_requests_per_connection = H2O_HTTP2_DEFAULT_MAX_CONCURRENT_STREAMING_REQUESTS;
@@ -207,7 +215,10 @@ void h2o_config_init(h2o_globalconf_t *config)
     config->http3.allow_delayed_ack = 1;
     config->http3.use_gso = 1;
     config->http3.max_concurrent_streaming_requests_per_connection = H2O_HTTP3_DEFAULT_MAX_CONCURRENT_STREAMING_REQUESTS;
+    {  // Begin logged block
     config->send_informational_mode = H2O_SEND_INFORMATIONAL_MODE_EXCEPT_H1;
+    LOG_VAR_INT(config->send_informational_mode); // Auto-logged
+    }  // End logged block
     config->mimemap = h2o_mimemap_create();
     h2o_socketpool_init_global(&config->proxy.global_socketpool, SIZE_MAX);
 

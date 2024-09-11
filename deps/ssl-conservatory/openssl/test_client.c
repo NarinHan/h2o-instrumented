@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Sample HTTPS client to demonstrate how to do certificate validation using 
  * OpenSSL.

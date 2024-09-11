@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014,2015 DeNA Co., Ltd., Kazuho Oku, Masahiro Nagano
  *
@@ -379,16 +384,25 @@ static void do_send(struct rp_generator_t *self)
     if (self->last_content_before_send != NULL && vecs[0].len == self->sending.buf->size &&
         self->last_content_before_send->size == 0) {
         veccnt = vecs[0].len != 0 ? 1 : 0;
-        ststate = H2O_SEND_STATE_FINAL;
+    {  // Begin logged block
+    ststate = H2O_SEND_STATE_FINAL;
+    LOG_VAR_INT(ststate); // Auto-logged
+    }  // End logged block
     } else {
         if (vecs[0].len == 0)
             return;
         veccnt = 1;
-        ststate = H2O_SEND_STATE_IN_PROGRESS;
+    {  // Begin logged block
+    ststate = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(ststate); // Auto-logged
+    }  // End logged block
     }
 
     if (self->had_body_error)
-        ststate = H2O_SEND_STATE_ERROR;
+    {  // Begin logged block
+    ststate = H2O_SEND_STATE_ERROR;
+    LOG_VAR_INT(ststate); // Auto-logged
+    }  // End logged block
 
     if (veccnt != 0)
         self->body_bytes_sent += vecs[0].len;
@@ -697,10 +711,16 @@ static h2o_httpclient_body_cb on_head(h2o_httpclient_t *client, const char *errs
     if (req->upgrade.base != NULL && (req->res.status == 101 || (200 <= req->res.status && req->res.status <= 299))) {
         assert(req->is_tunnel_req);
         if (req->version < 0x200) {
-            req->res.status = 101;
+    {  // Begin logged block
+    req->res.status = 101;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
             h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_UPGRADE, NULL, req->upgrade.base, req->upgrade.len);
         } else {
-            req->res.status = 200;
+    {  // Begin logged block
+    req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
         }
     }
 

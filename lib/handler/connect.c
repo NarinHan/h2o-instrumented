@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2021 Fastly Inc.
  *
@@ -678,7 +683,10 @@ static void tcp_on_connect(h2o_socket_t *_sock, const char *err)
     record_connect_success(self);
 
     /* build and submit 200 response */
+    {  // Begin logged block
     self->src_req->res.status = 200;
+    LOG_VAR_INT(self->src_req->res.status); // Auto-logged
+    }  // End logged block
     h2o_start_response(self->src_req, &self->super);
     h2o_send(self->src_req, NULL, 0, H2O_SEND_STATE_IN_PROGRESS);
 }
@@ -932,11 +940,17 @@ static int udp_connect(struct st_connect_generator_t *self, struct st_server_add
     /* build and submit success */
     if (self->src_req->version < 0x200 && !self->udp.is_draft03) {
         assert(self->src_req->upgrade.base != NULL);
-        self->src_req->res.status = 101;
+    {  // Begin logged block
+    self->src_req->res.status = 101;
+    LOG_VAR_INT(self->src_req->res.status); // Auto-logged
+    }  // End logged block
         self->src_req->res.reason = "Switching Protocols";
         h2o_add_header(&self->src_req->pool, &self->src_req->res.headers, H2O_TOKEN_UPGRADE, NULL, H2O_STRLIT("connect-udp"));
     } else {
-        self->src_req->res.status = 200;
+    {  // Begin logged block
+    self->src_req->res.status = 200;
+    LOG_VAR_INT(self->src_req->res.status); // Auto-logged
+    }  // End logged block
     }
     if (!self->udp.is_draft03)
         h2o_add_header_by_str(&self->src_req->pool, &self->src_req->res.headers, H2O_STRLIT("capsule-protocol"), 0, NULL,
@@ -1167,11 +1181,17 @@ const char *h2o_connect_parse_acl(h2o_connect_acl_entry_t *output, const char *i
     struct in_addr v4addr;
     struct in6_addr v6addr;
     if (strcmp(host, "*") == 0) {
-        output->addr_family = H2O_CONNECT_ACL_ADDRESS_ANY;
+    {  // Begin logged block
+    output->addr_family = H2O_CONNECT_ACL_ADDRESS_ANY;
+    LOG_VAR_INT(output->addr_family); // Auto-logged
+    }  // End logged block
         if (output->addr_mask != 0)
             return "wildcard address (*) cannot have a netmask";
     } else if (inet_pton(AF_INET, host, &v4addr) == 1) {
-        output->addr_family = H2O_CONNECT_ACL_ADDRESS_V4;
+    {  // Begin logged block
+    output->addr_family = H2O_CONNECT_ACL_ADDRESS_V4;
+    LOG_VAR_INT(output->addr_family); // Auto-logged
+    }  // End logged block
         if (output->addr_mask == 0) {
             output->addr_mask = 32;
         } else if (output->addr_mask > 32) {
@@ -1179,7 +1199,10 @@ const char *h2o_connect_parse_acl(h2o_connect_acl_entry_t *output, const char *i
         }
         output->addr.v4 = ntohl(v4addr.s_addr) & TO_BITMASK(uint32_t, output->addr_mask);
     } else if (inet_pton(AF_INET6, host, &v6addr) == 1) {
-        output->addr_family = H2O_CONNECT_ACL_ADDRESS_V6;
+    {  // Begin logged block
+    output->addr_family = H2O_CONNECT_ACL_ADDRESS_V6;
+    LOG_VAR_INT(output->addr_family); // Auto-logged
+    }  // End logged block
         if (output->addr_mask == 0) {
             output->addr_mask = 128;
         } else if (output->addr_mask > 128) {

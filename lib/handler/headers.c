@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015 DeNA Co., Ltd., Kazuho Oku
  *
@@ -72,7 +77,10 @@ static void on_sender_deferred_timeout(h2o_timer_t *entry)
     if (sender->req->res.status != 0)
         return;
 
+    {  // Begin logged block
     sender->req->res.status = 103;
+    LOG_VAR_INT(sender->req->res.status); // Auto-logged
+    }  // End logged block
 
     /* expect on_informational will be called and applies headers commands */
     h2o_send_informational(sender->req);

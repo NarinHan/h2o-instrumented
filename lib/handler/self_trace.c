@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2021 Fastly, Kazuho Oku
  *
@@ -135,7 +140,10 @@ static int on_req(h2o_handler_t *handler, h2o_req_t *req)
     tracer->ctx = self;
 
     /* build response headers */
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CONTENT_TYPE, NULL, H2O_STRLIT("text/plain; charset=utf-8"));
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CACHE_CONTROL, NULL, H2O_STRLIT("no-cache, no-store"));
     h2o_buffer_append(&self->buf, "\n", 1); /* add some data for simplicity */

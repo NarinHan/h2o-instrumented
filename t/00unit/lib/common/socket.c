@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015 DeNA Co., Ltd.
  *
@@ -123,7 +128,10 @@ static void test_prepare_for_latency_optimization(void)
     ok(cb_ret_vars.minimize_notsent_lowat.cur == 1);
 
     /* recalculate with an updated cwnd,unacked */
+    {  // Begin logged block
     sock._latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_NEEDS_UPDATE;
+    LOG_VAR_INT(_latency_optimization.state); // Auto-logged
+    }  // End logged block
     prepare_for_latency_optimized_write(&sock, &cond, 50000 /* rtt */, 1400 /* mss */, 14 /* cwnd_size */, 12 /* cwnd_avail */, 4,
                                         test_adjust_notsent_lowat);
     ok(sock._latency_optimization.state == H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DETERMINED);
@@ -133,7 +141,10 @@ static void test_prepare_for_latency_optimization(void)
     ok(cb_ret_vars.minimize_notsent_lowat.cur == 1);
 
     /* switches to B/W optimization when CWND becomes greater */
+    {  // Begin logged block
     sock._latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_NEEDS_UPDATE;
+    LOG_VAR_INT(_latency_optimization.state); // Auto-logged
+    }  // End logged block
     prepare_for_latency_optimized_write(&sock, &cond, 50000 /* rtt */, 1400 /* mss */, (65535 / 1400) + 1 /* cwnd_size */,
                                         (65535 / 1400) + 1 /* cwnd_avail */, 4, test_adjust_notsent_lowat);
     ok(sock._latency_optimization.state == H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DETERMINED);
@@ -143,7 +154,10 @@ static void test_prepare_for_latency_optimization(void)
     ok(cb_ret_vars.minimize_notsent_lowat.cur == 0);
 
     /* switches back to latency optimization when CWND becomes small */
+    {  // Begin logged block
     sock._latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_NEEDS_UPDATE;
+    LOG_VAR_INT(_latency_optimization.state); // Auto-logged
+    }  // End logged block
     prepare_for_latency_optimized_write(&sock, &cond, 50000 /* rtt */, 1400 /* mss */, 8 /* cwnd_size */, 6 /* cwnd_avail */, 4,
                                         test_adjust_notsent_lowat);
     ok(sock._latency_optimization.state == H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DETERMINED);
@@ -153,7 +167,10 @@ static void test_prepare_for_latency_optimization(void)
     ok(cb_ret_vars.minimize_notsent_lowat.cur == 1);
 
     /* switches back to B/W optimization when loop time becomes greater than threshold */
+    {  // Begin logged block
     sock._latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_NEEDS_UPDATE;
+    LOG_VAR_INT(_latency_optimization.state); // Auto-logged
+    }  // End logged block
     prepare_for_latency_optimized_write(&sock, &cond, 50000 /* rtt */, 1400 /* mss */, 8 /* cwnd_size */, 6 /* cwnd_avail */, 6,
                                         test_adjust_notsent_lowat);
     ok(sock._latency_optimization.state == H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DISABLED);

@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include "fmacros.h"
 #include "sockcompat.h"
 #include <stdio.h>

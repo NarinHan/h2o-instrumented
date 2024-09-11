@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2017 Fastly, Kazuho Oku
  *
@@ -803,7 +808,10 @@ size_t quicly_decode_packet(quicly_context_t *ctx, quicly_decoded_packet_t *pack
             /* VN packet or packets of unknown version cannot be parsed. `encrypted_off` is set to the first byte after SCID. */
             packet->encrypted_off = src - packet->octets.base;
         }
-        packet->_is_stateless_reset_cached = QUICLY__DECODED_PACKET_CACHED_NOT_STATELESS_RESET;
+    {  // Begin logged block
+    packet->_is_stateless_reset_cached = QUICLY__DECODED_PACKET_CACHED_NOT_STATELESS_RESET;
+    LOG_VAR_INT(packet->_is_stateless_reset_cached); // Auto-logged
+    }  // End logged block
     } else {
         /* short header */
         if (ctx->cid_encryptor != NULL) {
@@ -822,7 +830,10 @@ size_t quicly_decode_packet(quicly_context_t *ctx, quicly_decoded_packet_t *pack
         packet->cid.src = ptls_iovec_init(NULL, 0);
         packet->version = 0;
         packet->encrypted_off = src - packet->octets.base;
-        packet->_is_stateless_reset_cached = QUICLY__DECODED_PACKET_CACHED_MAYBE_STATELESS_RESET;
+    {  // Begin logged block
+    packet->_is_stateless_reset_cached = QUICLY__DECODED_PACKET_CACHED_MAYBE_STATELESS_RESET;
+    LOG_VAR_INT(packet->_is_stateless_reset_cached); // Auto-logged
+    }  // End logged block
     }
 
     *off += packet->octets.len;
@@ -1171,12 +1182,21 @@ static void init_stream_properties(quicly_stream_t *stream, uint32_t initial_max
     stream->streams_blocked = 0;
 
     stream->_send_aux.max_stream_data = initial_max_stream_data_remote;
+    {  // Begin logged block
     stream->_send_aux.stop_sending.sender_state = QUICLY_SENDER_STATE_NONE;
+    LOG_VAR_INT(stream->_send_aux.stop_sending.sender_state); // Auto-logged
+    }  // End logged block
     stream->_send_aux.stop_sending.error_code = 0;
+    {  // Begin logged block
     stream->_send_aux.reset_stream.sender_state = QUICLY_SENDER_STATE_NONE;
+    LOG_VAR_INT(stream->_send_aux.reset_stream.sender_state); // Auto-logged
+    }  // End logged block
     stream->_send_aux.reset_stream.error_code = 0;
     quicly_maxsender_init(&stream->_send_aux.max_stream_data_sender, initial_max_stream_data_local);
+    {  // Begin logged block
     stream->_send_aux.blocked = QUICLY_SENDER_STATE_NONE;
+    LOG_VAR_INT(stream->_send_aux.blocked); // Auto-logged
+    }  // End logged block
     quicly_linklist_init(&stream->_send_aux.pending_link.control);
     quicly_linklist_init(&stream->_send_aux.pending_link.default_scheduler);
 
@@ -2539,7 +2559,10 @@ static quicly_conn_t *create_connection(quicly_context_t *ctx, uint32_t protocol
     quicly_remote_cid_init_set(&conn->super.remote.cid_set, remote_cid, ctx->tls->random_bytes);
     assert(conn->paths[0]->dcid == 0 && conn->super.remote.cid_set.cids[0].sequence == 0 &&
            conn->super.remote.cid_set.cids[0].state == QUICLY_REMOTE_CID_IN_USE && "paths[0].dcid uses cids[0]");
+    {  // Begin logged block
     conn->super.state = QUICLY_STATE_FIRSTFLIGHT;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
     if (server_name != NULL) {
         conn->super.local.bidi.next_stream_id = 0;
         conn->super.local.uni.next_stream_id = 2;
@@ -3270,9 +3293,15 @@ static int on_ack_data_blocked(quicly_sentmap_t *map, const quicly_sent_packet_t
 
     if (conn->egress.max_data.permitted == sent->data.data_blocked.offset) {
         if (acked) {
-            conn->egress.data_blocked = QUICLY_SENDER_STATE_ACKED;
+    {  // Begin logged block
+    conn->egress.data_blocked = QUICLY_SENDER_STATE_ACKED;
+    LOG_VAR_INT(conn->egress.data_blocked); // Auto-logged
+    }  // End logged block
         } else if (packet->frames_in_flight && conn->egress.data_blocked == QUICLY_SENDER_STATE_UNACKED) {
-            conn->egress.data_blocked = QUICLY_SENDER_STATE_SEND;
+    {  // Begin logged block
+    conn->egress.data_blocked = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(conn->egress.data_blocked); // Auto-logged
+    }  // End logged block
             conn->egress.pending_flows |= QUICLY_PENDING_FLOW_OTHERS_BIT;
         }
     }
@@ -3291,9 +3320,15 @@ static int on_ack_stream_data_blocked_frame(quicly_sentmap_t *map, const quicly_
 
     if (stream->_send_aux.max_stream_data == sent->data.stream_data_blocked.offset) {
         if (acked) {
-            stream->_send_aux.blocked = QUICLY_SENDER_STATE_ACKED;
+    {  // Begin logged block
+    stream->_send_aux.blocked = QUICLY_SENDER_STATE_ACKED;
+    LOG_VAR_INT(stream->_send_aux.blocked); // Auto-logged
+    }  // End logged block
         } else if (packet->frames_in_flight && stream->_send_aux.blocked == QUICLY_SENDER_STATE_UNACKED) {
-            stream->_send_aux.blocked = QUICLY_SENDER_STATE_SEND;
+    {  // Begin logged block
+    stream->_send_aux.blocked = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(stream->_send_aux.blocked); // Auto-logged
+    }  // End logged block
             sched_stream_control(stream);
         }
     }
@@ -3503,7 +3538,10 @@ static int setup_path_dcid(quicly_conn_t *conn, size_t path_index)
     }
 
     /* associate */
+    {  // Begin logged block
     set->cids[found].state = QUICLY_REMOTE_CID_IN_USE;
+    LOG_VAR_INT(set->cids[found].state); // Auto-logged
+    }  // End logged block
     path->dcid = set->cids[found].sequence;
 
     return 1;
@@ -4073,7 +4111,10 @@ static int send_control_frames_of_stream(quicly_stream_t *stream, quicly_send_co
         sent->data.stream_data_blocked.stream_id = stream->stream_id;
         sent->data.stream_data_blocked.offset = offset;
         s->dst = quicly_encode_stream_data_blocked_frame(s->dst, stream->stream_id, offset);
-        stream->_send_aux.blocked = QUICLY_SENDER_STATE_UNACKED;
+    {  // Begin logged block
+    stream->_send_aux.blocked = QUICLY_SENDER_STATE_UNACKED;
+    LOG_VAR_INT(stream->_send_aux.blocked); // Auto-logged
+    }  // End logged block
         ++stream->conn->super.stats.num_frames_sent.stream_data_blocked;
         QUICLY_PROBE(STREAM_DATA_BLOCKED_SEND, stream->conn, stream->conn->stash.now, stream->stream_id, offset);
         QUICLY_LOG_CONN(stream_data_blocked_send, stream->conn, {
@@ -4108,7 +4149,10 @@ int quicly_is_blocked(quicly_conn_t *conn)
 
     /* schedule the transmission of DATA_BLOCKED frame, if it's new information */
     if (conn->egress.data_blocked == QUICLY_SENDER_STATE_NONE) {
-        conn->egress.data_blocked = QUICLY_SENDER_STATE_SEND;
+    {  // Begin logged block
+    conn->egress.data_blocked = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(conn->egress.data_blocked); // Auto-logged
+    }  // End logged block
         conn->egress.pending_flows = QUICLY_PENDING_FLOW_OTHERS_BIT;
     }
 
@@ -4134,7 +4178,10 @@ int quicly_stream_can_send(quicly_stream_t *stream, int at_stream_level)
 
     /* if known to be blocked at stream-level, schedule the emission of STREAM_DATA_BLOCKED frame */
     if (at_stream_level && stream->_send_aux.blocked == QUICLY_SENDER_STATE_NONE) {
-        stream->_send_aux.blocked = QUICLY_SENDER_STATE_SEND;
+    {  // Begin logged block
+    stream->_send_aux.blocked = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(stream->_send_aux.blocked); // Auto-logged
+    }  // End logged block
         sched_stream_control(stream);
     }
 
@@ -4549,7 +4596,10 @@ static int send_data_blocked(quicly_conn_t *conn, quicly_send_context_t *s)
         goto Exit;
     sent->data.data_blocked.offset = offset;
     s->dst = quicly_encode_data_blocked_frame(s->dst, offset);
+    {  // Begin logged block
     conn->egress.data_blocked = QUICLY_SENDER_STATE_UNACKED;
+    LOG_VAR_INT(conn->egress.data_blocked); // Auto-logged
+    }  // End logged block
 
     ++conn->super.stats.num_frames_sent.data_blocked;
     QUICLY_PROBE(DATA_BLOCKED_SEND, conn, conn->stash.now, offset);
@@ -5456,7 +5506,10 @@ Exit:
     return ret;
 
 CloseNow:
+    {  // Begin logged block
     conn->super.state = QUICLY_STATE_DRAINING;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
     destroy_all_streams(conn, 0, 0);
     return QUICLY_ERROR_FREE_CONNECTION;
 }
@@ -5700,10 +5753,16 @@ static int enter_close(quicly_conn_t *conn, int local_is_initiating, int wait_dr
     ++conn->egress.packet_number;
 
     if (local_is_initiating) {
-        conn->super.state = QUICLY_STATE_CLOSING;
+    {  // Begin logged block
+    conn->super.state = QUICLY_STATE_CLOSING;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
         conn->egress.send_ack_at = 0;
     } else {
-        conn->super.state = QUICLY_STATE_DRAINING;
+    {  // Begin logged block
+    conn->super.state = QUICLY_STATE_DRAINING;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
         conn->egress.send_ack_at = wait_draining ? conn->stash.now + get_sentmap_expiration_time(conn) : 0;
     }
 
@@ -6085,7 +6144,10 @@ static int handle_max_stream_data_frame(quicly_conn_t *conn, struct st_quicly_ha
     if (frame.max_stream_data <= stream->_send_aux.max_stream_data)
         return 0;
     stream->_send_aux.max_stream_data = frame.max_stream_data;
+    {  // Begin logged block
     stream->_send_aux.blocked = QUICLY_SENDER_STATE_NONE;
+    LOG_VAR_INT(stream->_send_aux.blocked); // Auto-logged
+    }  // End logged block
 
     if (stream->_send_aux.reset_stream.sender_state == QUICLY_SENDER_STATE_NONE)
         resched_stream_data(stream);
@@ -6299,7 +6361,10 @@ static int handle_max_data_frame(quicly_conn_t *conn, struct st_quicly_handle_pa
     if (frame.max_data <= conn->egress.max_data.permitted)
         return 0;
     conn->egress.max_data.permitted = frame.max_data;
+    {  // Begin logged block
     conn->egress.data_blocked = QUICLY_SENDER_STATE_NONE; /* DATA_BLOCKED has not been sent for the new limit */
+    LOG_VAR_INT(conn->egress.data_blocked); // Auto-logged
+    }  // End logged block
 
     return 0;
 }
@@ -6451,11 +6516,17 @@ int quicly_is_destination(quicly_conn_t *conn, struct sockaddr *dest_addr, struc
     return 0;
 
 Found:
+    {  // Begin logged block
     decoded->_is_stateless_reset_cached = QUICLY__DECODED_PACKET_CACHED_NOT_STATELESS_RESET;
+    LOG_VAR_INT(decoded->_is_stateless_reset_cached); // Auto-logged
+    }  // End logged block
     return 1;
 
 Found_StatelessReset:
+    {  // Begin logged block
     decoded->_is_stateless_reset_cached = QUICLY__DECODED_PACKET_CACHED_IS_STATELESS_RESET;
+    LOG_VAR_INT(decoded->_is_stateless_reset_cached); // Auto-logged
+    }  // End logged block
     return 1;
 }
 
@@ -6868,7 +6939,10 @@ int quicly_accept(quicly_conn_t **conn, quicly_context_t *ctx, struct sockaddr *
         ret = PTLS_ERROR_NO_MEMORY;
         goto Exit;
     }
+    {  // Begin logged block
     (*conn)->super.state = QUICLY_STATE_ACCEPTING;
+    LOG_VAR_INT((*conn)->super.state); // Auto-logged
+    }  // End logged block
     quicly_set_cid(&(*conn)->super.original_dcid, packet->cid.dest.encrypted);
     if (address_token != NULL) {
         (*conn)->super.remote.address_validation.validated = !address_token->address_mismatch;
@@ -6930,7 +7004,10 @@ int quicly_accept(quicly_conn_t **conn, quicly_context_t *ctx, struct sockaddr *
 Exit:
     if (*conn != NULL) {
         if (ret == 0) {
-            (*conn)->super.state = QUICLY_STATE_CONNECTED;
+    {  // Begin logged block
+    (*conn)->super.state = QUICLY_STATE_CONNECTED;
+    LOG_VAR_INT((*conn)->super.state); // Auto-logged
+    }  // End logged block
         } else {
             initiate_close(*conn, ret, offending_frame_type, "");
             ret = 0;
@@ -7159,7 +7236,10 @@ int quicly_receive(quicly_conn_t *conn, struct sockaddr *dest_addr, struct socka
 
     /* update states */
     if (conn->super.state == QUICLY_STATE_FIRSTFLIGHT)
-        conn->super.state = QUICLY_STATE_CONNECTED;
+    {  // Begin logged block
+    conn->super.state = QUICLY_STATE_CONNECTED;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
     conn->super.stats.num_packets.received += 1;
     conn->paths[path_index]->packet_last_received = conn->super.stats.num_packets.received;
     conn->paths[path_index]->num_packets.received += 1;
@@ -7348,7 +7428,10 @@ void quicly_reset_stream(quicly_stream_t *stream, int err)
     quicly_sendstate_reset(&stream->sendstate);
 
     /* setup RESET_STREAM */
+    {  // Begin logged block
     stream->_send_aux.reset_stream.sender_state = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(stream->_send_aux.reset_stream.sender_state); // Auto-logged
+    }  // End logged block
     stream->_send_aux.reset_stream.error_code = QUICLY_ERROR_GET_ERROR_CODE(err);
 
     /* schedule for delivery */
@@ -7363,7 +7446,10 @@ void quicly_request_stop(quicly_stream_t *stream, int err)
 
     /* send STOP_SENDING if the incoming side of the stream is still open */
     if (stream->recvstate.eos == UINT64_MAX && stream->_send_aux.stop_sending.sender_state == QUICLY_SENDER_STATE_NONE) {
-        stream->_send_aux.stop_sending.sender_state = QUICLY_SENDER_STATE_SEND;
+    {  // Begin logged block
+    stream->_send_aux.stop_sending.sender_state = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(stream->_send_aux.stop_sending.sender_state); // Auto-logged
+    }  // End logged block
         stream->_send_aux.stop_sending.error_code = QUICLY_ERROR_GET_ERROR_CODE(err);
         sched_stream_control(stream);
     }

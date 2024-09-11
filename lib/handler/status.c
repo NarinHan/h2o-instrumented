@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2016 DeNA Co., Ltd., Kazuho Oku
  *
@@ -114,7 +119,10 @@ static void send_response(struct st_h2o_status_collector_t *collector)
     }
     resp[cur_resp++] = (h2o_iovec_t){H2O_STRLIT("\n}\n")};
 
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CONTENT_TYPE, NULL, H2O_STRLIT("text/plain; charset=utf-8"));
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CACHE_CONTROL, NULL, H2O_STRLIT("no-cache, no-store"));
     h2o_start_response(req, &generator);

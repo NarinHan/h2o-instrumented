@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -536,13 +541,22 @@ static int on_config_zerocopy(h2o_configurator_command_t *cmd, h2o_configurator_
     ssize_t ret = h2o_configurator_get_one_of(cmd, node, "OFF,ON,ALWAYS");
     switch (ret) {
     case 0:
-        ctx->globalconf->proxy.zerocopy = H2O_PROXY_ZEROCOPY_DISABLED;
+    {  // Begin logged block
+    ctx->globalconf->proxy.zerocopy = H2O_PROXY_ZEROCOPY_DISABLED;
+    LOG_VAR_INT(ctx->globalconf->proxy.zerocopy); // Auto-logged
+    }  // End logged block
         break;
     case 1:
-        ctx->globalconf->proxy.zerocopy = H2O_PROXY_ZEROCOPY_ENABLED;
+    {  // Begin logged block
+    ctx->globalconf->proxy.zerocopy = H2O_PROXY_ZEROCOPY_ENABLED;
+    LOG_VAR_INT(ctx->globalconf->proxy.zerocopy); // Auto-logged
+    }  // End logged block
         break;
     case 2:
-        ctx->globalconf->proxy.zerocopy = H2O_PROXY_ZEROCOPY_ALWAYS;
+    {  // Begin logged block
+    ctx->globalconf->proxy.zerocopy = H2O_PROXY_ZEROCOPY_ALWAYS;
+    LOG_VAR_INT(ctx->globalconf->proxy.zerocopy); // Auto-logged
+    }  // End logged block
         break;
     default:
         return -1;

@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison implementation for Yacc-like parsers in C
@@ -1481,7 +1486,10 @@ heredoc_end(parser_state *p)
 {
   p->parsing_heredoc = p->parsing_heredoc->cdr;
   if (p->parsing_heredoc == NULL) {
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     end_strterm(p);
   }
   else {
@@ -6140,7 +6148,10 @@ yyreduce:
   case 2:
 #line 1611 "mrbgems/mruby-compiler/core/parse.y"
                     {
-                      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       if (!p->locals) p->locals = cons(0,0);
                     }
 #line 6147 "mrbgems/mruby-compiler/core/y.tab.c"
@@ -6285,7 +6296,10 @@ yyreduce:
 
   case 18:
 #line 1714 "mrbgems/mruby-compiler/core/parse.y"
-                                     {p->lstate = EXPR_FNAME;}
+    {  // Begin logged block
+    {p->lstate = EXPR_FNAME;}
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
 #line 6290 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
 
@@ -6568,7 +6582,10 @@ yyreduce:
   case 56:
 #line 1885 "mrbgems/mruby-compiler/core/parse.y"
                     {
-                      p->lstate = EXPR_FNAME;
+    {  // Begin logged block
+    p->lstate = EXPR_FNAME;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                     }
 #line 6574 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
@@ -6581,7 +6598,10 @@ yyreduce:
                       p->in_def++;
                       p->in_single++;
                       nvars_block(p);
-                      p->lstate = EXPR_ENDFN; /* force for args */
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN; /* force for args */
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                     }
 #line 6587 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
@@ -7041,7 +7061,10 @@ yyreduce:
   case 121:
 #line 2177 "mrbgems/mruby-compiler/core/parse.y"
                     {
-                      p->lstate = EXPR_ENDFN;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       (yyval.id) = (yyvsp[0].id);
                     }
 #line 7048 "mrbgems/mruby-compiler/core/y.tab.c"
@@ -7050,7 +7073,10 @@ yyreduce:
   case 122:
 #line 2182 "mrbgems/mruby-compiler/core/parse.y"
                     {
-                      p->lstate = EXPR_ENDFN;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       (yyval.id) = (yyvsp[0].id);
                     }
 #line 7057 "mrbgems/mruby-compiler/core/y.tab.c"
@@ -7066,7 +7092,10 @@ yyreduce:
 
   case 126:
 #line 2196 "mrbgems/mruby-compiler/core/parse.y"
-                                 {p->lstate = EXPR_FNAME;}
+    {  // Begin logged block
+    {p->lstate = EXPR_FNAME;}
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
 #line 7071 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
 
@@ -8009,7 +8038,10 @@ yyreduce:
 
   case 297:
 #line 2692 "mrbgems/mruby-compiler/core/parse.y"
-                       {p->lstate = EXPR_ENDARG;}
+    {  // Begin logged block
+    {p->lstate = EXPR_ENDARG;}
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
 #line 8014 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
 
@@ -8024,7 +8056,10 @@ yyreduce:
 
   case 299:
 #line 2697 "mrbgems/mruby-compiler/core/parse.y"
-                              {p->lstate = EXPR_ENDARG;}
+    {  // Begin logged block
+    {p->lstate = EXPR_ENDARG;}
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
 #line 8029 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
 
@@ -9195,7 +9230,10 @@ yyreduce:
   case 465:
 #line 3468 "mrbgems/mruby-compiler/core/parse.y"
                     {
-                      p->lstate = EXPR_ENDARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       (yyval.nd) = new_sym(p, (yyvsp[0].id));
                     }
 #line 9202 "mrbgems/mruby-compiler/core/y.tab.c"
@@ -9205,7 +9243,10 @@ yyreduce:
 #line 3473 "mrbgems/mruby-compiler/core/parse.y"
                     {
                       node *n = (yyvsp[-1].nd);
-                      p->lstate = EXPR_ENDARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       if (intn((yyvsp[0].nd)->cdr->cdr) > 0) {
                         n = push(n, (yyvsp[0].nd));
                       }
@@ -9415,7 +9456,10 @@ yyreduce:
   case 498:
 #line 3614 "mrbgems/mruby-compiler/core/parse.y"
                     {
-                      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       p->cmd_start = TRUE;
                     }
 #line 9422 "mrbgems/mruby-compiler/core/y.tab.c"
@@ -9433,7 +9477,10 @@ yyreduce:
 #line 3635 "mrbgems/mruby-compiler/core/parse.y"
                     {
                       (yyval.nd) = (yyvsp[-1].nd);
-                      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
                       p->cmd_start = TRUE;
                     }
 #line 9440 "mrbgems/mruby-compiler/core/y.tab.c"
@@ -9969,7 +10016,10 @@ yyreduce:
 
   case 573:
 #line 3975 "mrbgems/mruby-compiler/core/parse.y"
-                      {p->lstate = EXPR_BEG;}
+    {  // Begin logged block
+    {p->lstate = EXPR_BEG;}
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
 #line 9974 "mrbgems/mruby-compiler/core/y.tab.c"
     break;
 
@@ -11207,7 +11257,10 @@ parse_string(parser_state *p)
       c = nextc(p);
       if (c == '{') {
         tokfix(p);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         p->cmd_start = TRUE;
         node *nd = new_str(p, tok(p), toklen(p));
         pylval.nd = nd;
@@ -11256,7 +11309,10 @@ parse_string(parser_state *p)
   }
 
   tokfix(p);
-  p->lstate = EXPR_ENDARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
   end_strterm(p);
 
   if (type & STR_FUNC_XQUOTE) {
@@ -11437,7 +11493,10 @@ heredoc_identifier(parser_state *p)
   info->line_head = TRUE;
   info->doc = NULL;
   p->heredocs_from_nextline = push(p->heredocs_from_nextline, newnode);
-  p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
 
   pylval.nd = newnode;
   return tHEREDOC_BEG;
@@ -11553,7 +11612,10 @@ parser_yylex(parser_state *p)
     }
   normal_newline:
     p->cmd_start = TRUE;
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     pylval.num = nlines;
     return '\n';
 
@@ -11561,7 +11623,10 @@ parser_yylex(parser_state *p)
     if ((c = nextc(p)) == '*') {
       if ((c = nextc(p)) == '=') {
         pylval.id = intern_op(pow);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tOP_ASGN;
       }
       pushback(p, c);
@@ -11579,7 +11644,10 @@ parser_yylex(parser_state *p)
     else {
       if (c == '=') {
         pylval.id = intern_op(mul);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tOP_ASGN;
       }
       pushback(p, c);
@@ -11595,23 +11663,35 @@ parser_yylex(parser_state *p)
       }
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     return c;
 
   case '!':
     c = nextc(p);
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if (c == '@') {
         return '!';
       }
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     if (c == '=') {
       return tNEQ;
@@ -11644,10 +11724,16 @@ parser_yylex(parser_state *p)
       }
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     if ((c = nextc(p)) == '=') {
       if ((c = nextc(p)) == '=') {
@@ -11677,10 +11763,16 @@ parser_yylex(parser_state *p)
         return token;
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if (p->lstate == EXPR_CLASS) {
         p->cmd_start = TRUE;
       }
@@ -11695,7 +11787,10 @@ parser_yylex(parser_state *p)
     if (c == '<') {
       if ((c = nextc(p)) == '=') {
         pylval.id = intern_op(lshift);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tOP_ASGN;
       }
       pushback(p, c);
@@ -11706,10 +11801,16 @@ parser_yylex(parser_state *p)
 
   case '>':
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     if ((c = nextc(p)) == '=') {
       return tGEQ;
@@ -11717,7 +11818,10 @@ parser_yylex(parser_state *p)
     if (c == '>') {
       if ((c = nextc(p)) == '=') {
         pylval.id = intern_op(rshift);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tOP_ASGN;
       }
       pushback(p, c);
@@ -11736,14 +11840,23 @@ parser_yylex(parser_state *p)
 
   case '`':
     if (p->lstate == EXPR_FNAME) {
-      p->lstate = EXPR_ENDFN;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return '`';
     }
     if (p->lstate == EXPR_DOT) {
       if (cmd_state)
-        p->lstate = EXPR_CMDARG;
+    {  // Begin logged block
+    p->lstate = EXPR_CMDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       else
-        p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return '`';
     }
     p->lex_strterm = new_strterm(p, str_xquote, '`', 0);
@@ -11751,7 +11864,10 @@ parser_yylex(parser_state *p)
 
   case '?':
     if (IS_END()) {
-      p->lstate = EXPR_VALUE;
+    {  // Begin logged block
+    p->lstate = EXPR_VALUE;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return '?';
     }
     c = nextc(p);
@@ -11796,7 +11912,10 @@ parser_yylex(parser_state *p)
       }
       ternary:
       pushback(p, c);
-      p->lstate = EXPR_VALUE;
+    {  // Begin logged block
+    p->lstate = EXPR_VALUE;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return '?';
     }
     newtok(p);
@@ -11817,27 +11936,42 @@ parser_yylex(parser_state *p)
     }
     tokfix(p);
     pylval.nd = new_str(p, tok(p), toklen(p));
+    {  // Begin logged block
     p->lstate = EXPR_ENDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return tCHAR;
 
   case '&':
     if ((c = nextc(p)) == '&') {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if ((c = nextc(p)) == '=') {
         pylval.id = intern_op(andand);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tOP_ASGN;
       }
       pushback(p, c);
       return tANDOP;
     }
     else if (c == '.') {
-      p->lstate = EXPR_DOT;
+    {  // Begin logged block
+    p->lstate = EXPR_DOT;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tANDDOT;
     }
     else if (c == '=') {
       pylval.id = intern_op(and);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     pushback(p, c);
@@ -11852,19 +11986,31 @@ parser_yylex(parser_state *p)
       c = '&';
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     return c;
 
   case '|':
     if ((c = nextc(p)) == '|') {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if ((c = nextc(p)) == '=') {
         pylval.id = intern_op(oror);
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tOP_ASGN;
       }
       pushback(p, c);
@@ -11872,14 +12018,23 @@ parser_yylex(parser_state *p)
     }
     if (c == '=') {
       pylval.id = intern_op(or);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     pushback(p, c);
     return '|';
@@ -11887,7 +12042,10 @@ parser_yylex(parser_state *p)
   case '+':
     c = nextc(p);
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if (c == '@') {
         return tUPLUS;
       }
@@ -11896,11 +12054,17 @@ parser_yylex(parser_state *p)
     }
     if (c == '=') {
       pylval.id = intern_op(add);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     if (IS_BEG() || (IS_SPCARG(c) && arg_ambiguous(p))) {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       pushback(p, c);
       if (c >= 0 && ISDIGIT(c)) {
         c = '+';
@@ -11908,14 +12072,20 @@ parser_yylex(parser_state *p)
       }
       return tUPLUS;
     }
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     pushback(p, c);
     return '+';
 
   case '-':
     c = nextc(p);
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if (c == '@') {
         return tUMINUS;
       }
@@ -11924,29 +12094,44 @@ parser_yylex(parser_state *p)
     }
     if (c == '=') {
       pylval.id = intern_op(sub);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     if (c == '>') {
-      p->lstate = EXPR_ENDFN;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tLAMBDA;
     }
     if (IS_BEG() || (IS_SPCARG(c) && arg_ambiguous(p))) {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       pushback(p, c);
       if (c >= 0 && ISDIGIT(c)) {
         return tUMINUS_NUM;
       }
       return tUMINUS;
     }
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     pushback(p, c);
     return '-';
 
   case '.':
     {
       int is_beg = IS_BEG();
-      p->lstate = EXPR_MID;
+    {  // Begin logged block
+    p->lstate = EXPR_MID;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if ((c = nextc(p)) == '.') {
         if ((c = nextc(p)) == '.') {
           return is_beg ? tBDOT3 : tDOT3;
@@ -11955,11 +12140,17 @@ parser_yylex(parser_state *p)
         return is_beg ? tBDOT2 : tDOT2;
       }
       pushback(p, c);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if (c >= 0 && ISDIGIT(c)) {
         yyerror(p, "no .<digit> floating literal anymore; put 0 before dot");
       }
-      p->lstate = EXPR_DOT;
+    {  // Begin logged block
+    p->lstate = EXPR_DOT;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return '.';
     }
 
@@ -11971,7 +12162,10 @@ parser_yylex(parser_state *p)
     int suffix = 0;
 
     is_float = seen_point = seen_e = nondigit = 0;
+    {  // Begin logged block
     p->lstate = EXPR_ENDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     newtok(p);
     if (c == '-' || c == '+') {
       tokadd(p, c);
@@ -12216,33 +12410,54 @@ parser_yylex(parser_state *p)
     COND_LEXPOP();
     CMDARG_LEXPOP();
     if (c == ')')
-      p->lstate = EXPR_ENDFN;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     else
-      p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return c;
 
   case ':':
     c = nextc(p);
     if (c == ':') {
       if (IS_BEG() || p->lstate == EXPR_CLASS || IS_SPCARG(-1)) {
-        p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         return tCOLON3;
       }
-      p->lstate = EXPR_DOT;
+    {  // Begin logged block
+    p->lstate = EXPR_DOT;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tCOLON2;
     }
     if (!space_seen && IS_END()) {
       pushback(p, c);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tLABEL_TAG;
     }
     if (IS_END() || ISSPACE(c) || c == '#') {
       pushback(p, c);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return ':';
     }
     pushback(p, c);
+    {  // Begin logged block
     p->lstate = EXPR_FNAME;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return tSYMBEG;
 
   case '/':
@@ -12252,7 +12467,10 @@ parser_yylex(parser_state *p)
     }
     if ((c = nextc(p)) == '=') {
       pylval.id = intern_op(div);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     pushback(p, c);
@@ -12261,34 +12479,55 @@ parser_yylex(parser_state *p)
       return tREGEXP_BEG;
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     return '/';
 
   case '^':
     if ((c = nextc(p)) == '=') {
       pylval.id = intern_op(xor);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     pushback(p, c);
     return '^';
 
   case ';':
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return ';';
 
   case ',':
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return ',';
 
   case '~':
@@ -12296,10 +12535,16 @@ parser_yylex(parser_state *p)
       if ((c = nextc(p)) != '@') {
         pushback(p, c);
       }
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     return '~';
 
@@ -12316,13 +12561,19 @@ parser_yylex(parser_state *p)
     p->paren_nest++;
     COND_PUSH(0);
     CMDARG_PUSH(0);
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return c;
 
   case '[':
     p->paren_nest++;
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       p->paren_nest--;
       if ((c = nextc(p)) == ']') {
         if ((c = nextc(p)) == '=') {
@@ -12340,14 +12591,20 @@ parser_yylex(parser_state *p)
     else if (IS_ARG() && space_seen) {
       c = tLBRACK;
     }
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     COND_PUSH(0);
     CMDARG_PUSH(0);
     return c;
 
   case '{':
     if (p->lpar_beg && p->lpar_beg == p->paren_nest) {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       p->lpar_beg = 0;
       p->paren_nest--;
       COND_PUSH(0);
@@ -12362,7 +12619,10 @@ parser_yylex(parser_state *p)
       c = tLBRACE;      /* hash */
     COND_PUSH(0);
     CMDARG_PUSH(0);
+    {  // Begin logged block
     p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     return c;
 
   case '\\':
@@ -12449,23 +12709,35 @@ parser_yylex(parser_state *p)
     }
     if ((c = nextc(p)) == '=') {
       pylval.id = intern_op(mod);
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       return tOP_ASGN;
     }
     if (IS_SPCARG(c)) {
       goto quotation;
     }
     if (p->lstate == EXPR_FNAME || p->lstate == EXPR_DOT) {
-      p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     else {
-      p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     }
     pushback(p, c);
     return '%';
 
   case '$':
+    {  // Begin logged block
     p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
     token_column = newtok(p);
     c = nextc(p);
     if (c < 0) {
@@ -12639,11 +12911,17 @@ parser_yylex(parser_state *p)
 
     switch (tok(p)[0]) {
     case '$':
-      p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       result = tGVAR;
       break;
     case '@':
-      p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       if (tok(p)[1] == '@')
         result = tCVAR;
       else
@@ -12677,7 +12955,10 @@ parser_yylex(parser_state *p)
               p->nvars->car = nint(nvar > n ? nvar : n);
             }
             pylval.num = n;
-            p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
             return tNUMPARAM;
           }
         }
@@ -12718,7 +12999,10 @@ parser_yylex(parser_state *p)
 
       if (IS_LABEL_POSSIBLE()) {
         if (IS_LABEL_SUFFIX(0)) {
-          p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
           tokfix(p);
           pylval.id = intern(tok(p), toklen(p));
           return tIDENTIFIER;
@@ -12757,7 +13041,10 @@ parser_yylex(parser_state *p)
             return kw->id[0];
           else {
             if (kw->id[0] != kw->id[1])
-              p->lstate = EXPR_BEG;
+    {  // Begin logged block
+    p->lstate = EXPR_BEG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
             return kw->id[1];
           }
         }
@@ -12765,17 +13052,29 @@ parser_yylex(parser_state *p)
 
       if (IS_BEG() || p->lstate == EXPR_DOT || IS_ARG()) {
         if (cmd_state) {
-          p->lstate = EXPR_CMDARG;
+    {  // Begin logged block
+    p->lstate = EXPR_CMDARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         }
         else {
-          p->lstate = EXPR_ARG;
+    {  // Begin logged block
+    p->lstate = EXPR_ARG;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
         }
       }
       else if (p->lstate == EXPR_FNAME) {
-        p->lstate = EXPR_ENDFN;
+    {  // Begin logged block
+    p->lstate = EXPR_ENDFN;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       }
       else {
-        p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       }
     }
     {
@@ -12783,7 +13082,10 @@ parser_yylex(parser_state *p)
 
       pylval.id = ident;
       if (last_state != EXPR_DOT && ISLOWER(tok(p)[0]) && local_var_p(p, ident)) {
-        p->lstate = EXPR_END;
+    {  // Begin logged block
+    p->lstate = EXPR_END;
+    LOG_VAR_INT(p->lstate); // Auto-logged
+    }  // End logged block
       }
     }
     return result;

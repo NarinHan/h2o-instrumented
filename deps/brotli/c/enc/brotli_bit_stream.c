@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /* Copyright 2014 Google Inc. All Rights Reserved.
 
    Distributed under MIT license.

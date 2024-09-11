@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 // (C) 2013 Cybozu et al.
 
 #include "yrmcds.h"
@@ -208,7 +213,10 @@ static yrmcds_error text_recv(yrmcds* c, yrmcds_response* r) {
     memset(r, 0, sizeof(yrmcds_response));
     r->serial = ++c->rserial;
     r->length = resp_len + 2;
+    {  // Begin logged block
     r->status = YRMCDS_STATUS_OK;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
     r->command = YRMCDS_CMD_BOTTOM;  // dummy for emulating binary protocol
 
     if( resp_len == 2 && memcmp(c->recvbuf, "OK", 2) == 0 ) {
@@ -217,11 +225,17 @@ static yrmcds_error text_recv(yrmcds* c, yrmcds_response* r) {
     }
     if( resp_len == 3 && memcmp(c->recvbuf, "END", 3) == 0 ) {
         // get failed for non-existing object.
-        r->status = YRMCDS_STATUS_NOTFOUND;
+    {  // Begin logged block
+    r->status = YRMCDS_STATUS_NOTFOUND;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
         goto FINISH;
     }
     if( resp_len == 5 && memcmp(c->recvbuf, "ERROR", 5) == 0 ) {
-        r->status = YRMCDS_STATUS_UNKNOWNCOMMAND;
+    {  // Begin logged block
+    r->status = YRMCDS_STATUS_UNKNOWNCOMMAND;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
         goto FINISH;
     }
     if( resp_len == 6 ) {
@@ -231,7 +245,10 @@ static yrmcds_error text_recv(yrmcds* c, yrmcds_response* r) {
         }
         if( memcmp(c->recvbuf, "EXISTS", 6) == 0 ) {
             // failure response for cas.
-            r->status = YRMCDS_STATUS_EXISTS;
+    {  // Begin logged block
+    r->status = YRMCDS_STATUS_EXISTS;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
             goto FINISH;
         }
     }
@@ -245,12 +262,18 @@ static yrmcds_error text_recv(yrmcds* c, yrmcds_response* r) {
     }
     if( resp_len == 9 && memcmp(c->recvbuf, "NOT_FOUND", 9) == 0 ) {
         // failure response for cas, delete, incr, decr, or touch.
-        r->status = YRMCDS_STATUS_NOTFOUND;
+    {  // Begin logged block
+    r->status = YRMCDS_STATUS_NOTFOUND;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
         goto FINISH;
     }
     if( resp_len == 10 && memcmp(c->recvbuf, "NOT_STORED", 10) == 0 ) {
         // failure response for add, replace, append, or prepend.
-        r->status = YRMCDS_STATUS_NOTSTORED;
+    {  // Begin logged block
+    r->status = YRMCDS_STATUS_NOTSTORED;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
         goto FINISH;
     }
     if( resp_len > 0 && '0' <= c->recvbuf[0] && c->recvbuf[0] <= '9' ) {
@@ -343,7 +366,10 @@ static yrmcds_error text_recv(yrmcds* c, yrmcds_response* r) {
     }
 
   UNKNOWN:
+    {  // Begin logged block
     r->status = YRMCDS_STATUS_OTHER;
+    LOG_VAR_INT(r->status); // Auto-logged
+    }  // End logged block
     fprintf(stderr, "[libyrmcds] unknown response: %.*s\n",
             (int)resp_len, c->recvbuf);
 

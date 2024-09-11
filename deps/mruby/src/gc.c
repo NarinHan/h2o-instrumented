@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** gc.c - garbage collector for mruby
 **
@@ -1126,7 +1131,10 @@ final_marking_phase(mrb_state *mrb, mrb_gc *gc)
 static void
 prepare_incremental_sweep(mrb_state *mrb, mrb_gc *gc)
 {
-  gc->state = MRB_GC_STATE_SWEEP;
+    {  // Begin logged block
+    gc->state = MRB_GC_STATE_SWEEP;
+    LOG_VAR_INT(gc->state); // Auto-logged
+    }  // End logged block
   gc->sweeps = gc->heaps;
   gc->live_after_mark = gc->live;
 }
@@ -1204,7 +1212,10 @@ incremental_gc(mrb_state *mrb, mrb_gc *gc, size_t limit)
   switch (gc->state) {
   case MRB_GC_STATE_ROOT:
     root_scan_phase(mrb, gc);
+    {  // Begin logged block
     gc->state = MRB_GC_STATE_MARK;
+    LOG_VAR_INT(gc->state); // Auto-logged
+    }  // End logged block
     flip_white_part(gc);
     return 0;
   case MRB_GC_STATE_MARK:
@@ -1220,7 +1231,10 @@ incremental_gc(mrb_state *mrb, mrb_gc *gc, size_t limit)
      size_t tried_sweep = 0;
      tried_sweep = incremental_sweep_phase(mrb, gc, limit);
      if (tried_sweep == 0)
-       gc->state = MRB_GC_STATE_ROOT;
+    {  // Begin logged block
+    gc->state = MRB_GC_STATE_ROOT;
+    LOG_VAR_INT(gc->state); // Auto-logged
+    }  // End logged block
      return tried_sweep;
   }
   default:

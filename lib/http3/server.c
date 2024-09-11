@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2018 Fastly, Kazuho Oku
  *
@@ -1545,7 +1550,10 @@ static int handle_input_expect_headers(struct st_h2o_http3_server_stream_t *stre
             return handle_input_expect_headers_send_http_error(stream, h2o_send_error_417, "Expectation Failed",
                                                                "unknown expectation", err_desc);
         }
-        stream->req.res.status = 100;
+    {  // Begin logged block
+    stream->req.res.status = 100;
+    LOG_VAR_INT(stream->req.res.status); // Auto-logged
+    }  // End logged block
         h2o_send_informational(&stream->req);
     }
 
@@ -1843,7 +1851,10 @@ static int stream_open_cb(quicly_stream_open_t *self, quicly_stream_t *qs)
     h2o_buffer_init(&stream->recvbuf.buf, &h2o_socket_buffer_prototype);
     stream->recvbuf.handle_input = handle_input_expect_headers;
     memset(&stream->sendbuf, 0, sizeof(stream->sendbuf));
+    {  // Begin logged block
     stream->state = H2O_HTTP3_SERVER_STREAM_STATE_RECV_HEADERS;
+    LOG_VAR_INT(stream->state); // Auto-logged
+    }  // End logged block
     stream->link = (h2o_linklist_t){NULL};
     stream->link_resp_settings_blocked = (h2o_linklist_t){NULL};
     stream->ostr_final = (h2o_ostream_t){
@@ -2022,12 +2033,21 @@ static int scheduler_update_state(struct st_quicly_stream_scheduler_t *sched, qu
 
     if (quicly_stream_can_send(qs, 1)) {
         if (quicly_is_blocked(conn->h3.super.quic) && !quicly_stream_can_send(qs, 0)) {
-            new_state = CONN_BLOCKED;
+    {  // Begin logged block
+    new_state = CONN_BLOCKED;
+    LOG_VAR_INT(new_state); // Auto-logged
+    }  // End logged block
         } else {
-            new_state = ACTIVATE;
+    {  // Begin logged block
+    new_state = ACTIVATE;
+    LOG_VAR_INT(new_state); // Auto-logged
+    }  // End logged block
         }
     } else {
-        new_state = DEACTIVATE;
+    {  // Begin logged block
+    new_state = DEACTIVATE;
+    LOG_VAR_INT(new_state); // Auto-logged
+    }  // End logged block
     }
 
     if (quicly_stream_is_unidirectional(qs->stream_id)) {
@@ -2314,7 +2334,10 @@ static void graceful_shutdown_resend_goaway(h2o_timer_t *entry)
         /* Section 5.2-1: "This identifier MAY be zero if no requests or pushes were processed."" */
         quicly_stream_id_t max_stream_id = next_stream_id < 4 ? 0 /* we haven't received any stream yet */ : next_stream_id - 4;
         h2o_http3_send_goaway_frame(&conn->h3, max_stream_id);
-        conn->h3.state = H2O_HTTP3_CONN_STATE_HALF_CLOSED;
+    {  // Begin logged block
+    conn->h3.state = H2O_HTTP3_CONN_STATE_HALF_CLOSED;
+    LOG_VAR_INT(conn->h3.state); // Auto-logged
+    }  // End logged block
         /* After waiting a second, we still have an active connection. If configured, wait one
          * final timeout before closing the connection */
         if (conn->super.ctx->globalconf->http3.graceful_shutdown_timeout > 0) {

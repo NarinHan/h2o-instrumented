@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015 DeNA Co., Ltd., Kazuho Oku, Justin Zhu
  *
@@ -659,7 +664,10 @@ static void disable_latency_optimized_write(h2o_socket_t *sock, int (*adjust_not
         adjust_notsent_lowat(sock, 0);
         sock->_latency_optimization.notsent_is_minimized = 0;
     }
+    {  // Begin logged block
     sock->_latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DISABLED;
+    LOG_VAR_INT(sock->_latency_optimization.state); // Auto-logged
+    }  // End logged block
     sock->_latency_optimization.suggested_tls_payload_size = SIZE_MAX;
     sock->_latency_optimization.suggested_write_size = SIZE_MAX;
 }
@@ -676,7 +684,10 @@ static inline void prepare_for_latency_optimized_write(h2o_socket_t *sock,
         goto Disable;
 
     /* latency-optimization is enabled */
+    {  // Begin logged block
     sock->_latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DETERMINED;
+    LOG_VAR_INT(sock->_latency_optimization.state); // Auto-logged
+    }  // End logged block
 
     /* no need to:
      *   1) adjust the write size if single_write_size << cwnd_size
@@ -810,7 +821,10 @@ static size_t calc_tls_write_size(h2o_socket_t *sock, size_t bufsize)
         recsize = sock->bytes_written < 64 * 1024 ? calc_suggested_tls_payload_size(sock, 1400) : SIZE_MAX;
         break;
     case H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_DETERMINED:
-        sock->_latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_NEEDS_UPDATE;
+    {  // Begin logged block
+    sock->_latency_optimization.state = H2O_SOCKET_LATENCY_OPTIMIZATION_STATE_NEEDS_UPDATE;
+    LOG_VAR_INT(sock->_latency_optimization.state); // Auto-logged
+    }  // End logged block
     /* fallthru */
     default:
         recsize = sock->_latency_optimization.suggested_tls_payload_size;
@@ -1435,7 +1449,10 @@ static SSL_SESSION *on_async_resumption_get(SSL *ssl,
 #if H2O_USE_OPENSSL_CLIENT_HELLO_CB
         h2o_fatal("on_async_resumption_client_hello should have captured this state");
 #endif
-        sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_REQUEST_SENT;
+    {  // Begin logged block
+    sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_REQUEST_SENT;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
         resumption_get_async(sock, h2o_iovec_init(data, len));
         return NULL;
     case ASYNC_RESUMPTION_STATE_COMPLETE:
@@ -1456,7 +1473,10 @@ static int on_async_resumption_client_hello(SSL *ssl, int *al, void *arg)
 
     if (sock->ssl->handshake.server.async_resumption.state == ASYNC_RESUMPTION_STATE_RECORD &&
         (sess_id_len = SSL_client_hello_get0_session_id(ssl, &sess_id)) != 0) {
-        sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_REQUEST_SENT;
+    {  // Begin logged block
+    sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_REQUEST_SENT;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
         resumption_get_async(sock, h2o_iovec_init(sess_id, sess_id_len));
         return SSL_CLIENT_HELLO_RETRY;
     }
@@ -1830,7 +1850,10 @@ static void proceed_handshake_openssl(h2o_socket_t *sock)
             first_input = h2o_iovec_init(alloca(sock->ssl->input.encrypted->size), sock->ssl->input.encrypted->size);
             memcpy(first_input.base, sock->ssl->input.encrypted->bytes, first_input.len);
         } else {
-            sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    {  // Begin logged block
+    sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
         }
     }
 
@@ -1843,7 +1866,10 @@ Redo:
             break;
         case ASYNC_RESUMPTION_STATE_RECORD:
             /* async resumption has not been triggered; proceed the state to complete */
-            sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    {  // Begin logged block
+    sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
             break;
         case ASYNC_RESUMPTION_STATE_REQUEST_SENT: {
             /* sent async request, reset the ssl state, and wait for async response */
@@ -1973,7 +1999,10 @@ static void proceed_handshake_undetermined(h2o_socket_t *sock)
     } else {
         /* picotls is responsible for handling the handshake */
         sock->ssl->ptls = ptls;
-        sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    {  // Begin logged block
+    sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
         h2o_buffer_consume(&sock->ssl->input.encrypted, consumed);
         if (ret == PTLS_ERROR_ASYNC_OPERATION) {
             do_proceed_handshake_async(sock, &wbuf);
@@ -2033,7 +2062,10 @@ void h2o_socket_ssl_handshake(h2o_socket_t *sock, SSL_CTX *ssl_ctx, const char *
 #if H2O_USE_KTLS
     /* Set offload state to TBD if kTLS is enabled. Otherwise, remains H2O_SOCKET_SSL_OFFLOAD_OFF. */
     if (h2o_socket_use_ktls)
-        sock->ssl->offload = H2O_SOCKET_SSL_OFFLOAD_TBD;
+    {  // Begin logged block
+    sock->ssl->offload = H2O_SOCKET_SSL_OFFLOAD_TBD;
+    LOG_VAR_INT(sock->ssl->offload); // Auto-logged
+    }  // End logged block
 #endif
 
     /* setup the buffers; sock->input should be empty, sock->ssl->input.encrypted should contain the initial input, if any */
@@ -2047,7 +2079,10 @@ void h2o_socket_ssl_handshake(h2o_socket_t *sock, SSL_CTX *ssl_ctx, const char *
     if (server_name == NULL) {
         /* is server */
         if (SSL_CTX_sess_get_get_cb(sock->ssl->ssl_ctx) != NULL)
-            sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_RECORD;
+    {  // Begin logged block
+    sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_RECORD;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
         if (sock->ssl->input.encrypted->size != 0)
             proceed_handshake(sock, 0);
         else
@@ -2095,7 +2130,10 @@ void h2o_socket_ssl_resume_server_handshake(h2o_socket_t *sock, h2o_iovec_t sess
         /* FIXME warn on failure */
     }
 
+    {  // Begin logged block
     sock->ssl->handshake.server.async_resumption.state = ASYNC_RESUMPTION_STATE_COMPLETE;
+    LOG_VAR_INT(sock->ssl->handshake.server.async_resumption.state); // Auto-logged
+    }  // End logged block
     proceed_handshake(sock, 0);
 
     if (sock->ssl->handshake.server.async_resumption.session_data != NULL) {

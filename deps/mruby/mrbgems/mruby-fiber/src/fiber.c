@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include <mruby.h>
 #include <mruby/array.h>
 #include <mruby/class.h>
@@ -123,7 +128,10 @@ fiber_init(mrb_state *mrb, mrb_value self)
   c->ci++;                      /* push dummy callinfo */
 
   c->fib = f;
-  c->status = MRB_FIBER_CREATED;
+    {  // Begin logged block
+    c->status = MRB_FIBER_CREATED;
+    LOG_VAR_INT(c->status); // Auto-logged
+    }  // End logged block
 
   return self;
 }
@@ -169,7 +177,10 @@ fiber_switch_context(mrb_state *mrb, struct mrb_context *c)
   if (mrb->c->fib) {
     mrb_write_barrier(mrb, (struct RBasic*)mrb->c->fib);
   }
-  c->status = MRB_FIBER_RUNNING;
+    {  // Begin logged block
+    c->status = MRB_FIBER_RUNNING;
+    LOG_VAR_INT(c->status); // Auto-logged
+    }  // End logged block
   mrb->c = c;
 }
 
@@ -330,7 +341,10 @@ fiber_transfer(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "*!", &a, &len);
 
   if (c == mrb->root_c) {
+    {  // Begin logged block
     mrb->c->status = MRB_FIBER_TRANSFERRED;
+    LOG_VAR_INT(mrb->c->status); // Auto-logged
+    }  // End logged block
     fiber_switch_context(mrb, c);
     MARK_CONTEXT_MODIFY(c);
     return fiber_result(mrb, a, len);
@@ -355,8 +369,14 @@ mrb_fiber_yield(mrb_state *mrb, mrb_int len, const mrb_value *a)
   }
 
   fiber_check_cfunc(mrb, c);
-  c->prev->status = MRB_FIBER_RUNNING;
-  c->status = MRB_FIBER_SUSPENDED;
+    {  // Begin logged block
+    c->prev->status = MRB_FIBER_RUNNING;
+    LOG_VAR_INT(c->prev->status); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    c->status = MRB_FIBER_SUSPENDED;
+    LOG_VAR_INT(c->status); // Auto-logged
+    }  // End logged block
   fiber_switch_context(mrb, c->prev);
   c->prev = NULL;
   if (c->vmexec) {

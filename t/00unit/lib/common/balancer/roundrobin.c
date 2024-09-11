@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include "../../../test.h"
 #include "../../../../../lib/common/balancer/roundrobin.c"
 

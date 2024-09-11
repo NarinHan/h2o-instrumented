@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2020 Fastly, Inc.
  *
@@ -81,7 +86,10 @@ static int do_register(quicly_remote_cid_set_t *set, uint64_t sequence, const ui
             set->cids[i].sequence = sequence;
             quicly_set_cid(&set->cids[i].cid, ptls_iovec_init(cid, cid_len));
             memcpy(set->cids[i].stateless_reset_token, srt, QUICLY_STATELESS_RESET_TOKEN_LEN);
-            set->cids[i].state = QUICLY_REMOTE_CID_AVAILABLE;
+    {  // Begin logged block
+    set->cids[i].state = QUICLY_REMOTE_CID_AVAILABLE;
+    LOG_VAR_INT(set->cids[i].state); // Auto-logged
+    }  // End logged block
             was_stored = 1;
         }
     }
@@ -93,7 +101,10 @@ static int do_register(quicly_remote_cid_set_t *set, uint64_t sequence, const ui
 
 static void do_unregister(quicly_remote_cid_set_t *set, size_t idx_to_unreg)
 {
+    {  // Begin logged block
     set->cids[idx_to_unreg].state = QUICLY_REMOTE_CID_UNAVAILABLE;
+    LOG_VAR_INT(set->cids[idx_to_unreg].state); // Auto-logged
+    }  // End logged block
     set->cids[idx_to_unreg].sequence = ++set->_largest_sequence_expected;
 }
 

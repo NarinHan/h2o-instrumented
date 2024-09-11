@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2016 DeNA Co., Ltd., Ichito Nagata
  *
@@ -46,7 +51,10 @@ static void invoke_deferred(h2o_redis_client_t *client, uint64_t tick, h2o_timer
 static void close_and_detach_connection(h2o_redis_client_t *client, const char *errstr)
 {
     assert(client->_redis != NULL);
+    {  // Begin logged block
     client->state = H2O_REDIS_CONNECTION_STATE_CLOSED;
+    LOG_VAR_INT(client->state); // Auto-logged
+    }  // End logged block
     if (client->on_close != NULL)
         client->on_close(errstr);
 
@@ -103,7 +111,10 @@ static void on_connect(const redisAsyncContext *redis, int status)
     }
     h2o_timer_unlink(&client->_timeout_entry);
 
+    {  // Begin logged block
     client->state = H2O_REDIS_CONNECTION_STATE_CONNECTED;
+    LOG_VAR_INT(client->state); // Auto-logged
+    }  // End logged block
     if (client->on_connect != NULL)
         client->on_connect();
 }
@@ -132,7 +143,10 @@ h2o_redis_client_t *h2o_redis_create_client(h2o_loop_t *loop, size_t sz)
     memset(client, 0, sz);
 
     client->loop = loop;
+    {  // Begin logged block
     client->state = H2O_REDIS_CONNECTION_STATE_CLOSED;
+    LOG_VAR_INT(client->state); // Auto-logged
+    }  // End logged block
     h2o_timer_init(&client->_timeout_entry, on_connect_timeout);
 
     return client;
@@ -151,7 +165,10 @@ void h2o_redis_connect(h2o_redis_client_t *client, const char *host, uint16_t po
 
     client->_redis = redis;
     client->_redis->data = client;
+    {  // Begin logged block
     client->state = H2O_REDIS_CONNECTION_STATE_CONNECTING;
+    LOG_VAR_INT(client->state); // Auto-logged
+    }  // End logged block
 
     attach_loop(redis, client->loop);
     redisAsyncSetConnectCallback(redis, on_connect);

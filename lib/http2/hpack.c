@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Fastly, Inc.
  *
@@ -631,7 +636,10 @@ int h2o_hpack_parse_response(h2o_mem_pool_t *pool, h2o_hpack_decode_header_cb de
                              const char **err_desc)
 {
     if (status != NULL)
-        *status = 0;
+    {  // Begin logged block
+    *status = 0;
+    LOG_VAR_INT(*status); // Auto-logged
+    }  // End logged block
 
     const uint8_t *src_end = src + len;
 

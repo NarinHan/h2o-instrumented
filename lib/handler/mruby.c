@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Ryosuke Matsumoto,
  *                         Masayoshi Takahashi
@@ -268,7 +273,10 @@ mrb_value send_early_hints_proc(mrb_state *mrb, mrb_value self)
 
     if (h2o_mruby_iterate_rack_headers(mrb->ud, headers, handle_early_hints_header, generator->req) == -1)
         mrb_exc_raise(mrb, mrb_obj_value(mrb->exc));
+    {  // Begin logged block
     generator->req->res.status = 103;
+    LOG_VAR_INT(generator->req->res.status); // Auto-logged
+    }  // End logged block
     h2o_send_informational(generator->req);
 
     return mrb_nil_value();
@@ -1080,7 +1088,10 @@ void h2o_mruby_run_fiber(h2o_mruby_context_t *ctx, mrb_value receiver, mrb_value
 
     mrb_state *mrb = ctx->shared->mrb;
     mrb_value output, resp;
+    {  // Begin logged block
     mrb_int status = 0;
+    LOG_VAR_INT(status); // Auto-logged
+    }  // End logged block
     h2o_mruby_generator_t *generator = NULL;
     h2o_mruby_send_response_callback_t send_response_callback = NULL;
 

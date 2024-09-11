@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** dir.c - Dir
 **
@@ -52,7 +57,10 @@ mrb_dir_free(mrb_state *mrb, void *ptr)
 
   if (mdir->dir) {
     closedir(mdir->dir);
+    {  // Begin logged block
     mdir->dir = NULL;
+    LOG_VAR_INT(mdir->dir); // Auto-logged
+    }  // End logged block
   }
   mrb_free(mrb, mdir);
 }
@@ -71,7 +79,10 @@ mrb_dir_close(mrb_state *mrb, mrb_value self)
   if (closedir(mdir->dir) == -1) {
     mrb_sys_fail(mrb, "closedir");
   }
-  mdir->dir = NULL;
+    {  // Begin logged block
+    mdir->dir = NULL;
+    LOG_VAR_INT(mdir->dir); // Auto-logged
+    }  // End logged block
   return mrb_nil_value();
 }
 
@@ -91,7 +102,10 @@ mrb_dir_init(mrb_state *mrb, mrb_value self)
   DATA_PTR(self) = NULL;
 
   mdir = (struct mrb_dir *)mrb_malloc(mrb, sizeof(*mdir));
-  mdir->dir = NULL;
+    {  // Begin logged block
+    mdir->dir = NULL;
+    LOG_VAR_INT(mdir->dir); // Auto-logged
+    }  // End logged block
   DATA_PTR(self) = mdir;
 
   mrb_get_args(mrb, "S", &path);
@@ -153,7 +167,10 @@ mrb_dir_mkdir(mrb_state *mrb, mrb_value klass)
   mrb_value spath;
   char *path;
 
-  mode = 0777;
+    {  // Begin logged block
+    mode = 0777;
+    LOG_VAR_INT(mode); // Auto-logged
+    }  // End logged block
   mrb_get_args(mrb, "S|i", &spath, &mode);
   path = mrb_str_to_cstr(mrb, spath);
 #ifndef _WIN32

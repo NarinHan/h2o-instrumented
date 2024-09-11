@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Domingo Alvarez Duarte,
  *                         Tatsuhiko Kubo, Nick Desaulniers, Marc Hoersken,
@@ -218,9 +223,15 @@ static void do_proceed(h2o_generator_t *_self, h2o_req_t *req)
     self->file.off += vec.len;
     self->bytesleft -= vec.len;
     if (self->bytesleft == 0) {
-        send_state = H2O_SEND_STATE_FINAL;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_FINAL;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     } else {
-        send_state = H2O_SEND_STATE_IN_PROGRESS;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     }
 
     /* send (closed in do_pread) */
@@ -266,10 +277,16 @@ static void do_multirange_proceed(h2o_generator_t *_self, h2o_req_t *req)
         vec[1].base = h2o_mem_alloc_pool(&req->pool, char, sizeof("\r\n--") - 1 + BOUNDARY_SIZE + sizeof("--\r\n"));
         vec[1].len = sprintf(vec[1].base, "\r\n--%s--\r\n", self->ranged.boundary.base);
         vecarrsize = 2;
-        send_state = H2O_SEND_STATE_FINAL;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_FINAL;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     } else {
         vecarrsize = 1;
-        send_state = H2O_SEND_STATE_IN_PROGRESS;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     }
     h2o_send(req, vec, vecarrsize, send_state);
     return;
@@ -476,7 +493,10 @@ static int send_dir_listing(h2o_req_t *req, const char *path, size_t path_len, i
     h2o_buffer_link_to_pool(body, &req->pool);
 
     /* send response */
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "OK";
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CONTENT_TYPE, NULL, H2O_STRLIT("text/html; charset=utf-8"));
 
@@ -675,11 +695,20 @@ static int serve_with_generator(struct st_h2o_sendfile_generator_t *generator, h
 
     /* determine the method */
     if (h2o_memis(req->method.base, req->method.len, H2O_STRLIT("GET"))) {
-        method_type = METHOD_IS_GET;
+    {  // Begin logged block
+    method_type = METHOD_IS_GET;
+    LOG_VAR_INT(method_type); // Auto-logged
+    }  // End logged block
     } else if (h2o_memis(req->method.base, req->method.len, H2O_STRLIT("HEAD"))) {
-        method_type = METHOD_IS_HEAD;
+    {  // Begin logged block
+    method_type = METHOD_IS_HEAD;
+    LOG_VAR_INT(method_type); // Auto-logged
+    }  // End logged block
     } else {
-        method_type = METHOD_IS_OTHER;
+    {  // Begin logged block
+    method_type = METHOD_IS_OTHER;
+    LOG_VAR_INT(method_type); // Auto-logged
+    }  // End logged block
     }
 
     /* obtain mime type */
@@ -799,7 +828,10 @@ EntireFile:
     return 0;
 
 NotModified:
+    {  // Begin logged block
     req->res.status = 304;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "Not Modified";
     add_headers_unconditional(generator, req);
     h2o_send_inline(req, NULL, 0);

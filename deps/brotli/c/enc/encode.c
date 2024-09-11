@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /* Copyright 2013 Google Inc. All Rights Reserved.
 
    Distributed under MIT license.
@@ -583,7 +588,10 @@ static void WriteMetaBlockInternal(MemoryManager* m,
                                 storage_ix, storage);
     if (BROTLI_IS_OOM(m)) return;
   } else {
+    {  // Begin logged block
     ContextType literal_context_mode = CONTEXT_UTF8;
+    LOG_VAR_INT(literal_context_mode); // Auto-logged
+    }  // End logged block
     MetaBlockSplit mb;
     InitMetaBlockSplit(&mb);
     if (params->quality < MIN_QUALITY_FOR_HQ_BLOCK_SPLITTING) {
@@ -602,7 +610,10 @@ static void WriteMetaBlockInternal(MemoryManager* m,
     } else {
       if (!BrotliIsMostlyUTF8(data, wrapped_last_flush_pos, mask, bytes,
                               kMinUTF8Ratio)) {
-        literal_context_mode = CONTEXT_SIGNED;
+    {  // Begin logged block
+    literal_context_mode = CONTEXT_SIGNED;
+    LOG_VAR_INT(literal_context_mode); // Auto-logged
+    }  // End logged block
       }
       BrotliBuildMetaBlock(m, data, wrapped_last_flush_pos, mask, params,
                            prev_byte, prev_byte2,
@@ -670,7 +681,10 @@ static BROTLI_BOOL EnsureInitialized(BrotliEncoderState* s) {
 }
 
 static void BrotliEncoderInitParams(BrotliEncoderParams* params) {
-  params->mode = BROTLI_DEFAULT_MODE;
+    {  // Begin logged block
+    params->mode = BROTLI_DEFAULT_MODE;
+    LOG_VAR_INT(params->mode); // Auto-logged
+    }  // End logged block
   params->quality = BROTLI_DEFAULT_QUALITY;
   params->lgwin = BROTLI_DEFAULT_WINDOW;
   params->lgblock = 0;
@@ -699,7 +713,10 @@ static void BrotliEncoderInitState(BrotliEncoderState* s) {
   s->next_out_ = NULL;
   s->available_out_ = 0;
   s->total_out_ = 0;
-  s->stream_state_ = BROTLI_STREAM_PROCESSING;
+    {  // Begin logged block
+    s->stream_state_ = BROTLI_STREAM_PROCESSING;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
   s->is_last_block_emitted_ = BROTLI_FALSE;
   s->is_initialized_ = BROTLI_FALSE;
 
@@ -1216,12 +1233,18 @@ static BROTLI_BOOL BrotliCompressBufferQuality10(
     } else {
       uint32_t num_direct_distance_codes = 0;
       uint32_t distance_postfix_bits = 0;
-      ContextType literal_context_mode = CONTEXT_UTF8;
+    {  // Begin logged block
+    ContextType literal_context_mode = CONTEXT_UTF8;
+    LOG_VAR_INT(literal_context_mode); // Auto-logged
+    }  // End logged block
       MetaBlockSplit mb;
       InitMetaBlockSplit(&mb);
       if (!BrotliIsMostlyUTF8(input_buffer, metablock_start, mask,
                               metablock_size, kMinUTF8Ratio)) {
-        literal_context_mode = CONTEXT_SIGNED;
+    {  // Begin logged block
+    literal_context_mode = CONTEXT_SIGNED;
+    LOG_VAR_INT(literal_context_mode); // Auto-logged
+    }  // End logged block
       }
       BrotliBuildMetaBlock(m, input_buffer, metablock_start, mask, &params,
                            prev_byte, prev_byte2,
@@ -1452,7 +1475,10 @@ static BROTLI_BOOL InjectFlushOrPushOutput(BrotliEncoderState* s,
 static void CheckFlushComplete(BrotliEncoderState* s) {
   if (s->stream_state_ == BROTLI_STREAM_FLUSH_REQUESTED &&
       s->available_out_ == 0) {
+    {  // Begin logged block
     s->stream_state_ = BROTLI_STREAM_PROCESSING;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
     s->next_out_ = 0;
   }
 }
@@ -1517,7 +1543,10 @@ static BROTLI_BOOL BrotliEncoderCompressStreamFast(
       int* table;
 
       if (force_flush && block_size == 0) {
-        s->stream_state_ = BROTLI_STREAM_FLUSH_REQUESTED;
+    {  // Begin logged block
+    s->stream_state_ = BROTLI_STREAM_FLUSH_REQUESTED;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
         continue;
       }
       if (max_out_size <= *available_out) {
@@ -1560,8 +1589,14 @@ static BROTLI_BOOL BrotliEncoderCompressStreamFast(
       s->last_byte_ = storage[storage_ix >> 3];
       s->last_byte_bits_ = storage_ix & 7u;
 
-      if (force_flush) s->stream_state_ = BROTLI_STREAM_FLUSH_REQUESTED;
-      if (is_last) s->stream_state_ = BROTLI_STREAM_FINISHED;
+    {  // Begin logged block
+    if (force_flush) s->stream_state_ = BROTLI_STREAM_FLUSH_REQUESTED;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    if (is_last) s->stream_state_ = BROTLI_STREAM_FINISHED;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
       continue;
     }
     break;
@@ -1579,7 +1614,10 @@ static BROTLI_BOOL ProcessMetadata(
   /* Switch to metadata block workflow, if required. */
   if (s->stream_state_ == BROTLI_STREAM_PROCESSING) {
     s->remaining_metadata_bytes_ = (uint32_t)*available_in;
+    {  // Begin logged block
     s->stream_state_ = BROTLI_STREAM_METADATA_HEAD;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
   }
   if (s->stream_state_ != BROTLI_STREAM_METADATA_HEAD &&
       s->stream_state_ != BROTLI_STREAM_METADATA_BODY) {
@@ -1603,14 +1641,20 @@ static BROTLI_BOOL ProcessMetadata(
       s->next_out_ = s->tiny_buf_.u8;
       s->available_out_ =
           WriteMetadataHeader(s, s->remaining_metadata_bytes_, s->next_out_);
-      s->stream_state_ = BROTLI_STREAM_METADATA_BODY;
+    {  // Begin logged block
+    s->stream_state_ = BROTLI_STREAM_METADATA_BODY;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
       continue;
     } else {
       /* Exit workflow only when there is no more input and no more output.
          Otherwise client may continue producing empty metadata blocks. */
       if (s->remaining_metadata_bytes_ == 0) {
         s->remaining_metadata_bytes_ = BROTLI_UINT32_MAX;
-        s->stream_state_ = BROTLI_STREAM_PROCESSING;
+    {  // Begin logged block
+    s->stream_state_ = BROTLI_STREAM_PROCESSING;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
         break;
       }
       if (*available_out) {
@@ -1716,8 +1760,14 @@ BROTLI_BOOL BrotliEncoderCompressStream(
         result = EncodeData(s, is_last, force_flush,
             &s->available_out_, &s->next_out_);
         if (!result) return BROTLI_FALSE;
-        if (force_flush) s->stream_state_ = BROTLI_STREAM_FLUSH_REQUESTED;
-        if (is_last) s->stream_state_ = BROTLI_STREAM_FINISHED;
+    {  // Begin logged block
+    if (force_flush) s->stream_state_ = BROTLI_STREAM_FLUSH_REQUESTED;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    if (is_last) s->stream_state_ = BROTLI_STREAM_FINISHED;
+    LOG_VAR_INT(s->stream_state_); // Auto-logged
+    }  // End logged block
         continue;
       }
     }

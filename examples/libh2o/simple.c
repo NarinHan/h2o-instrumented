@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -51,7 +56,10 @@ static int chunked_test(h2o_handler_t *self, h2o_req_t *req)
         return -1;
 
     h2o_iovec_t body = h2o_strdup(&req->pool, "hello world\n", SIZE_MAX);
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "OK";
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CONTENT_TYPE, NULL, H2O_STRLIT("text/plain"));
     h2o_start_response(req, &generator);
@@ -65,7 +73,10 @@ static int reproxy_test(h2o_handler_t *self, h2o_req_t *req)
     if (!h2o_memis(req->method.base, req->method.len, H2O_STRLIT("GET")))
         return -1;
 
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "OK";
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_X_REPROXY_URL, NULL, H2O_STRLIT("http://www.ietf.org/"));
     h2o_send_inline(req, H2O_STRLIT("you should never see this!\n"));
@@ -78,7 +89,10 @@ static int post_test(h2o_handler_t *self, h2o_req_t *req)
     if (h2o_memis(req->method.base, req->method.len, H2O_STRLIT("POST")) &&
         h2o_memis(req->path_normalized.base, req->path_normalized.len, H2O_STRLIT("/post-test/"))) {
         static h2o_generator_t generator = {NULL, NULL};
-        req->res.status = 200;
+    {  // Begin logged block
+    req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
         req->res.reason = "OK";
         h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_CONTENT_TYPE, NULL, H2O_STRLIT("text/plain; charset=utf-8"));
         h2o_start_response(req, &generator);

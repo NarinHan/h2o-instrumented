@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015 DeNA Co., Ltd., Kazuho Oku
  *
@@ -26,6 +31,7 @@ static int on_config(h2o_configurator_command_t *cmd, h2o_configurator_context_t
 {
     const char *dest;
     int status = 302; /* default is temporary redirect */
+    LOG_VAR_INT(status); // Auto-logged
     int internal = 0; /* default is external redirect */
 
     switch (node->type) {

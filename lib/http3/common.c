@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2018 Fastly, Kazuho Oku
  *
@@ -1165,7 +1170,10 @@ int h2o_http3_setup(h2o_http3_conn_t *conn, quicly_conn_t *quic)
     int ret;
 
     h2o_quic_setup(&conn->super, quic);
+    {  // Begin logged block
     conn->state = H2O_HTTP3_CONN_STATE_OPEN;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
 
     /* setup h3 objects, only when the connection state has been created */
     if (quicly_get_state(quic) > QUICLY_STATE_CONNECTED)

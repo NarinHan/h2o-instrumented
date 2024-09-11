@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2017 Ichito Nagata, Fastly, Inc.
  *
@@ -261,9 +266,15 @@ static void subreq_ostream_send(h2o_ostream_t *_self, h2o_req_t *_subreq, h2o_se
     int is_first = subreq->state == INITIAL;
     if (h2o_send_state_is_in_progress(state)) {
         h2o_proceed_response_deferred(&subreq->super);
-        subreq->state = RECEIVED;
+    {  // Begin logged block
+    subreq->state = RECEIVED;
+    LOG_VAR_INT(subreq->state); // Auto-logged
+    }  // End logged block
     } else {
-        subreq->state = FINAL_RECEIVED;
+    {  // Begin logged block
+    subreq->state = FINAL_RECEIVED;
+    LOG_VAR_INT(subreq->state); // Auto-logged
+    }  // End logged block
     }
 
     append_bufs(subreq, inbufs, inbufcnt);
@@ -656,7 +667,10 @@ static struct st_mruby_subreq_t *create_subreq(h2o_mruby_context_t *ctx, mrb_val
     h2o_buffer_init(&subreq->buf, &h2o_socket_buffer_prototype);
     subreq->shortcut.response = NULL;
     subreq->shortcut.body = NULL;
+    {  // Begin logged block
     subreq->state = INITIAL;
+    LOG_VAR_INT(subreq->state); // Auto-logged
+    }  // End logged block
     subreq->chain_proceed = 0;
 
     /* Initialize super and conn. At the moment, `conn.super` (i.e., `h2o_conn_t`) is instantiated directly (TODO consider using

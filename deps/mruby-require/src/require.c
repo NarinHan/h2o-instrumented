@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #if !(defined(_WIN32) || defined(_WIN64))
 #include <err.h>
 #endif

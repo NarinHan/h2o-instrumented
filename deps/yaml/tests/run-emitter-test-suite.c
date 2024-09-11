@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include <yaml.h>
 
 #include <stdlib.h>
@@ -102,11 +107,20 @@ int main(int argc, char *argv[])
             ok = yaml_document_end_event_initialize(&event, implicit);
         }
         else if (strncmp(line, "+MAP", 4) == 0) {
-            style = YAML_BLOCK_MAPPING_STYLE;
+    {  // Begin logged block
+    style = YAML_BLOCK_MAPPING_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
             if (flow == 1)
-                style = YAML_FLOW_MAPPING_STYLE;
+    {  // Begin logged block
+    style = YAML_FLOW_MAPPING_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
             else if (flow == 0 && strncmp(line+5, "{}", 2) == 0)
-                style = YAML_FLOW_MAPPING_STYLE;
+    {  // Begin logged block
+    style = YAML_FLOW_MAPPING_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
             ok = yaml_mapping_start_event_initialize(&event, (yaml_char_t *)
                                                      get_anchor('&', line, anchor), (yaml_char_t *)
                                                      get_tag(line, tag), 0, style);
@@ -115,11 +129,20 @@ int main(int argc, char *argv[])
             ok = yaml_mapping_end_event_initialize(&event);
         }
         else if (strncmp(line, "+SEQ", 4) == 0) {
-            style = YAML_BLOCK_SEQUENCE_STYLE;
+    {  // Begin logged block
+    style = YAML_BLOCK_SEQUENCE_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
             if (flow == 1)
-                style = YAML_FLOW_MAPPING_STYLE;
+    {  // Begin logged block
+    style = YAML_FLOW_MAPPING_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
             else if (flow == 0 && strncmp(line+5, "[]", 2) == 0)
-                style = YAML_FLOW_SEQUENCE_STYLE;
+    {  // Begin logged block
+    style = YAML_FLOW_SEQUENCE_STYLE;
+    LOG_VAR_INT(style); // Auto-logged
+    }  // End logged block
             ok = yaml_sequence_start_event_initialize(&event, (yaml_char_t *)
                                                       get_anchor('&', line, anchor), (yaml_char_t *)
                                                       get_tag(line, tag), 0, style);
@@ -241,15 +264,30 @@ void get_value(char *line, char *value, int *style)
         if (*c == ' ') {
             start = c + 1;
             if (*start == ':')
-                *style = YAML_PLAIN_SCALAR_STYLE;
+    {  // Begin logged block
+    *style = YAML_PLAIN_SCALAR_STYLE;
+    LOG_VAR_INT(*style); // Auto-logged
+    }  // End logged block
             else if (*start == '\'')
-                *style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    *style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(*style); // Auto-logged
+    }  // End logged block
             else if (*start == '"')
-                *style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    {  // Begin logged block
+    *style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
+    LOG_VAR_INT(*style); // Auto-logged
+    }  // End logged block
             else if (*start == '|')
-                *style = YAML_LITERAL_SCALAR_STYLE;
+    {  // Begin logged block
+    *style = YAML_LITERAL_SCALAR_STYLE;
+    LOG_VAR_INT(*style); // Auto-logged
+    }  // End logged block
             else if (*start == '>')
-                *style = YAML_FOLDED_SCALAR_STYLE;
+    {  // Begin logged block
+    *style = YAML_FOLDED_SCALAR_STYLE;
+    LOG_VAR_INT(*style); // Auto-logged
+    }  // End logged block
             else {
                 start = NULL;
                 continue;

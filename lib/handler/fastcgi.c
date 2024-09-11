@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015-2016 DeNA Co., Ltd. Kazuho Oku
  *
@@ -448,14 +453,23 @@ static void do_send(struct st_fcgi_generator_t *generator)
     veccnt = vecs[0].len != 0 ? 1 : 0;
     if (generator->sock == NULL && vecs[0].len == generator->resp.sending.buf->size && generator->resp.receiving->size == 0) {
         if (generator->leftsize == 0 || generator->leftsize == SIZE_MAX) {
-            send_state = H2O_SEND_STATE_FINAL;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_FINAL;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
         } else {
-            send_state = H2O_SEND_STATE_ERROR;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_ERROR;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
         }
     } else {
         if (veccnt == 0)
             return;
-        send_state = H2O_SEND_STATE_IN_PROGRESS;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
     }
     h2o_send(generator->req, vecs, veccnt, send_state);
 }
@@ -494,7 +508,10 @@ static int fill_headers(h2o_req_t *req, struct phr_header *headers, size_t num_h
     size_t i;
 
     /* set the defaults */
+    {  // Begin logged block
     req->res.status = 200;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "OK";
     req->res.content_length = SIZE_MAX;
 

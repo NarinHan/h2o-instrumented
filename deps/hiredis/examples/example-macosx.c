@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 //
 //  Created by Дмитрий Бахвалов on 13.07.15.
 //  Copyright (c) 2015 Dmitry Bakhvalov. All rights reserved.

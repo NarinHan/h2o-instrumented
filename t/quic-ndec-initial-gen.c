@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>

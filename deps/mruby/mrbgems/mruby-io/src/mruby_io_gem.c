@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include "mruby.h"
 
 void mrb_init_io(mrb_state *mrb);

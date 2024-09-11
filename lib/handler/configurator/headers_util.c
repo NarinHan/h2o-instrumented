@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include "h2o.h"
 #include "h2o/configurator.h"
 
@@ -88,11 +93,17 @@ static int parse_header_node(h2o_configurator_command_t *cmd, yoml_t **node, yom
     if ((*node)->type == YOML_TYPE_SCALAR) {
         *headers = node;
         *num_headers = 1;
-        *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    {  // Begin logged block
+    *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    LOG_VAR_INT(*when); // Auto-logged
+    }  // End logged block
     } else if ((*node)->type == YOML_TYPE_SEQUENCE) {
         *headers = (*node)->data.sequence.elements;
         *num_headers = (*node)->data.sequence.size;
-        *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    {  // Begin logged block
+    *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    LOG_VAR_INT(*when); // Auto-logged
+    }  // End logged block
     } else {
         yoml_t **header_node;
         yoml_t **when_node = NULL;
@@ -106,17 +117,29 @@ static int parse_header_node(h2o_configurator_command_t *cmd, yoml_t **node, yom
             *num_headers = 1;
         }
         if (when_node == NULL) {
-            *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    {  // Begin logged block
+    *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    LOG_VAR_INT(*when); // Auto-logged
+    }  // End logged block
         } else {
             switch (h2o_configurator_get_one_of(cmd, *when_node, "final,early,all")) {
             case 0:
-                *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    {  // Begin logged block
+    *when = H2O_HEADERS_CMD_WHEN_FINAL;
+    LOG_VAR_INT(*when); // Auto-logged
+    }  // End logged block
                 break;
             case 1:
-                *when = H2O_HEADERS_CMD_WHEN_EARLY;
+    {  // Begin logged block
+    *when = H2O_HEADERS_CMD_WHEN_EARLY;
+    LOG_VAR_INT(*when); // Auto-logged
+    }  // End logged block
                 break;
             case 2:
-                *when = H2O_HEADERS_CMD_WHEN_ALL;
+    {  // Begin logged block
+    *when = H2O_HEADERS_CMD_WHEN_ALL;
+    LOG_VAR_INT(*when); // Auto-logged
+    }  // End logged block
                 break;
             default:
                 return -1;

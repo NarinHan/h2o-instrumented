@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Fastly, Inc.
  *
@@ -57,7 +62,10 @@ static void enqueue_goaway(h2o_http2_conn_t *conn, int errnum, h2o_iovec_t addit
         /* http2 spec allows sending GOAWAY more than once (for one reason since errors may arise after sending the first one) */
         h2o_http2_encode_goaway_frame(&conn->_write.buf, conn->pull_stream_ids.max_open, errnum, additional_data);
         h2o_http2_conn_request_write(conn);
-        conn->state = H2O_HTTP2_CONN_STATE_HALF_CLOSED;
+    {  // Begin logged block
+    conn->state = H2O_HTTP2_CONN_STATE_HALF_CLOSED;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     }
 }
 
@@ -368,7 +376,10 @@ void h2o_http2_conn_unregister_stream(h2o_http2_conn_t *conn, h2o_http2_stream_t
 void close_connection_now(h2o_http2_conn_t *conn)
 {
     /* mark as is_closing here to prevent sending any more frames */
+    {  // Begin logged block
     conn->state = H2O_HTTP2_CONN_STATE_IS_CLOSING;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
 
     h2o_http2_stream_t *stream;
 
@@ -430,7 +441,10 @@ void close_connection_now(h2o_http2_conn_t *conn)
 
 int close_connection(h2o_http2_conn_t *conn)
 {
+    {  // Begin logged block
     conn->state = H2O_HTTP2_CONN_STATE_IS_CLOSING;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
 
     if (conn->_write.buf_in_flight != NULL || h2o_timer_is_linked(&conn->_write.timeout_entry)) {
         /* there is a pending write, let on_write_complete actually close the connection */
@@ -703,7 +717,10 @@ static int handle_incoming_request(h2o_http2_conn_t *conn, h2o_http2_stream_t *s
             h2o_send_error_417(&stream->req, "Expectation Failed", "unknown expectation", 0);
             return 0;
         }
-        stream->req.res.status = 100;
+    {  // Begin logged block
+    stream->req.res.status = 100;
+    LOG_VAR_INT(stream->req.res.status); // Auto-logged
+    }  // End logged block
         h2o_send_informational(&stream->req);
     }
 
@@ -1586,7 +1603,10 @@ void do_emit_writereq(h2o_http2_conn_t *conn)
     case H2O_HTTP2_CONN_STATE_HALF_CLOSED:
         if (conn->num_streams.pull.open + conn->num_streams.push.open != 0)
             break;
-        conn->state = H2O_HTTP2_CONN_STATE_IS_CLOSING;
+    {  // Begin logged block
+    conn->state = H2O_HTTP2_CONN_STATE_IS_CLOSING;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     /* fall-thru */
     case H2O_HTTP2_CONN_STATE_IS_CLOSING:
         close_connection(conn);
@@ -1806,7 +1826,10 @@ static h2o_http2_conn_t *create_conn(h2o_context_t *ctx, h2o_hostconf_t **hosts,
     conn->peer_settings = H2O_HTTP2_SETTINGS_DEFAULT;
     conn->streams = kh_init(h2o_http2_stream_t);
     h2o_http2_scheduler_init(&conn->scheduler);
+    {  // Begin logged block
     conn->state = H2O_HTTP2_CONN_STATE_OPEN;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     conn->_read_expect = expect_preface;
     conn->_input_header_table.hpack_capacity = conn->_input_header_table.hpack_max_capacity =
         H2O_HTTP2_SETTINGS_DEFAULT.header_table_size;
@@ -1991,7 +2014,10 @@ int h2o_http2_handle_upgrade(h2o_req_t *req, struct timeval connected_at)
     h2o_http2_stream_prepare_for_request(http2conn, stream);
 
     /* send response */
+    {  // Begin logged block
     req->res.status = 101;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "Switching Protocols";
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_UPGRADE, NULL, H2O_STRLIT("h2c"));
     h2o_http1_upgrade(req, NULL, 0, on_upgrade_complete, http2conn);

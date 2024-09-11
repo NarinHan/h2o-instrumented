@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2015 Kazuho Oku, DeNA Co., Ltd.
  *
@@ -2258,4 +2263,7 @@ Fail:
 
 void (*neverbleed_post_fork_cb)(void) = NULL;
 void (*neverbleed_transaction_cb)(neverbleed_iobuf_t *, int) = NULL;
-enum neverbleed_offload_type neverbleed_offload = NEVERBLEED_OFFLOAD_OFF;
+    {  // Begin logged block
+    enum neverbleed_offload_type neverbleed_offload = NEVERBLEED_OFFLOAD_OFF;
+    LOG_VAR_INT(neverbleed_offload); // Auto-logged
+    }  // End logged block

@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2009-2011, Salvatore Sanfilippo <antirez at gmail dot com>
  * Copyright (c) 2010-2011, Pieter Noordhuis <pcnoordhuis at gmail dot com>
@@ -396,7 +401,10 @@ static void __redisAsyncFree(redisAsyncContext *ac) {
     if (c->flags & REDIS_CONNECTED) {
         int status = ac->err == 0 ? REDIS_OK : REDIS_ERR;
         if (c->flags & REDIS_FREEING)
-            status = REDIS_OK;
+    {  // Begin logged block
+    status = REDIS_OK;
+    LOG_VAR_INT(status); // Auto-logged
+    }  // End logged block
         __redisRunDisconnectCallback(ac, status);
     }
 

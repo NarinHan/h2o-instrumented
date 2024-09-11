@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /* Copyright 2015 Google Inc. All Rights Reserved.
 
    Distributed under MIT license.
@@ -44,14 +49,35 @@ void BrotliDecoderStateInitWithCustomAllocators(BrotliDecoderState* s,
   s->error_code = 0; /* BROTLI_DECODER_NO_ERROR */
 
   BrotliInitBitReader(&s->br);
-  s->state = BROTLI_STATE_UNINITED;
-  s->substate_metablock_header = BROTLI_STATE_METABLOCK_HEADER_NONE;
-  s->substate_tree_group = BROTLI_STATE_TREE_GROUP_NONE;
-  s->substate_context_map = BROTLI_STATE_CONTEXT_MAP_NONE;
-  s->substate_uncompressed = BROTLI_STATE_UNCOMPRESSED_NONE;
-  s->substate_huffman = BROTLI_STATE_HUFFMAN_NONE;
+    {  // Begin logged block
+    s->state = BROTLI_STATE_UNINITED;
+    LOG_VAR_INT(s->state); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    s->substate_metablock_header = BROTLI_STATE_METABLOCK_HEADER_NONE;
+    LOG_VAR_INT(s->substate_metablock_header); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    s->substate_tree_group = BROTLI_STATE_TREE_GROUP_NONE;
+    LOG_VAR_INT(s->substate_tree_group); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    s->substate_context_map = BROTLI_STATE_CONTEXT_MAP_NONE;
+    LOG_VAR_INT(s->substate_context_map); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    s->substate_uncompressed = BROTLI_STATE_UNCOMPRESSED_NONE;
+    LOG_VAR_INT(s->substate_uncompressed); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    s->substate_huffman = BROTLI_STATE_HUFFMAN_NONE;
+    LOG_VAR_INT(s->substate_huffman); // Auto-logged
+    }  // End logged block
   s->substate_decode_uint8 = BROTLI_STATE_DECODE_UINT8_NONE;
-  s->substate_read_block_length = BROTLI_STATE_READ_BLOCK_LENGTH_NONE;
+    {  // Begin logged block
+    s->substate_read_block_length = BROTLI_STATE_READ_BLOCK_LENGTH_NONE;
+    LOG_VAR_INT(s->substate_read_block_length); // Auto-logged
+    }  // End logged block
 
   s->dictionary = BrotliGetDictionary();
 

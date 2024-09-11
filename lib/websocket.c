@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -158,7 +163,10 @@ h2o_websocket_conn_t *h2o_upgrade_to_websocket(h2o_req_t *req, const char *clien
 
     /* build response */
     create_accept_key(accept_key, client_key);
+    {  // Begin logged block
     req->res.status = 101;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.reason = "Switching Protocols";
     h2o_add_header(&req->pool, &req->res.headers, H2O_TOKEN_UPGRADE, NULL, H2O_STRLIT("websocket"));
     h2o_add_header_by_str(&req->pool, &req->res.headers, H2O_STRLIT("sec-websocket-accept"), 0, NULL, accept_key,

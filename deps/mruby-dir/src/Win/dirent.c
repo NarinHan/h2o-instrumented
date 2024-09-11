@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 
     Implementation of POSIX directory browsing functions and types for Win32.
@@ -37,7 +42,10 @@ typedef struct DIR DIR;
 
 DIR *opendir(const char *name)
 {
+    {  // Begin logged block
     DIR *dir = 0;
+    LOG_VAR_INT(*dir); // Auto-logged
+    }  // End logged block
 
     if(name && name[0])
     {
@@ -59,13 +67,19 @@ DIR *opendir(const char *name)
             {
                 free(dir->name);
                 free(dir);
-                dir = 0;
+    {  // Begin logged block
+    dir = 0;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
             }
         }
         else /* rollback */
         {
             free(dir);
-            dir   = 0;
+    {  // Begin logged block
+    dir   = 0;
+    LOG_VAR_INT(dir); // Auto-logged
+    }  // End logged block
             errno = ENOMEM;
         }
     }

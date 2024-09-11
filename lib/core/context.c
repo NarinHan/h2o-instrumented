@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -277,7 +282,10 @@ h2o_conn_t *h2o_create_connection(size_t sz, h2o_context_t *ctx, h2o_hostconf_t 
     conn->callbacks = callbacks;
     conn->_uuid.is_initialized = 0;
 
+    {  // Begin logged block
     conn->state = H2O_CONN_STATE_ACTIVE;
+    LOG_VAR_INT(conn->state); // Auto-logged
+    }  // End logged block
     conn->_conns = (h2o_linklist_t){};
     link_conn(conn);
 

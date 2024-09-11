@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** cmdmisc.c - mruby debugger miscellaneous command functions
 **
@@ -475,14 +480,20 @@ dbgcmd_quit(mrb_state *mrb, mrdb_state *mrdb)
       fflush(stdout);
 
       if ((buf = getchar()) == EOF) {
-        mrdb->dbg->xm = DBG_QUIT;
+    {  // Begin logged block
+    mrdb->dbg->xm = DBG_QUIT;
+    LOG_VAR_INT(mrdb->dbg->xm); // Auto-logged
+    }  // End logged block
         break;
       }
       c = buf;
       while (buf != '\n' && (buf = getchar()) != EOF) ;
 
       if (c == 'y' || c == 'Y') {
-        mrdb->dbg->xm = DBG_QUIT;
+    {  // Begin logged block
+    mrdb->dbg->xm = DBG_QUIT;
+    LOG_VAR_INT(mrdb->dbg->xm); // Auto-logged
+    }  // End logged block
         break;
       }
       else if (c == 'n' || c == 'N') {
@@ -494,7 +505,10 @@ dbgcmd_quit(mrb_state *mrb, mrdb_state *mrdb)
     }
     break;
   default:
+    {  // Begin logged block
     mrdb->dbg->xm = DBG_QUIT;
+    LOG_VAR_INT(mrdb->dbg->xm); // Auto-logged
+    }  // End logged block
     break;
   }
 

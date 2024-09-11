@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2020, Salvatore Sanfilippo <antirez at gmail dot com>
  * Copyright (c) 2020, Pieter Noordhuis <pcnoordhuis at gmail dot com>

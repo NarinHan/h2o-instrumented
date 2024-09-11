@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Shota Fukumori,
  *                         Fastly, Inc.
@@ -443,11 +448,20 @@ static const char *fixup_request(struct st_h2o_http1_conn_t *conn, struct phr_he
         conn->_ostr_final.super.send_informational = NULL;
 
     if (h2o_memis(conn->req.input.method.base, conn->req.input.method.len, H2O_STRLIT("CONNECT"))) {
-        method_type = METHOD_CONNECT;
+    {  // Begin logged block
+    method_type = METHOD_CONNECT;
+    LOG_VAR_INT(method_type); // Auto-logged
+    }  // End logged block
     } else if (h2o_memis(conn->req.input.method.base, conn->req.input.method.len, H2O_STRLIT("CONNECT-UDP"))) {
-        method_type = METHOD_CONNECT_UDP;
+    {  // Begin logged block
+    method_type = METHOD_CONNECT_UDP;
+    LOG_VAR_INT(method_type); // Auto-logged
+    }  // End logged block
     } else {
-        method_type = METHOD_NORMAL;
+    {  // Begin logged block
+    method_type = METHOD_NORMAL;
+    LOG_VAR_INT(method_type); // Auto-logged
+    }  // End logged block
     }
 
     /* init headers */
@@ -822,7 +836,10 @@ static void on_send_complete_post_trailers(h2o_socket_t *sock, const char *err)
     if (err != NULL)
         conn->req.http1_is_persistent = 0;
 
+    {  // Begin logged block
     conn->_ostr_final.state = OSTREAM_STATE_DONE;
+    LOG_VAR_INT(conn->_ostr_final.state); // Auto-logged
+    }  // End logged block
     if (conn->req.proceed_req == NULL)
         cleanup_connection(conn);
 }
@@ -852,7 +869,10 @@ static void on_send_complete(h2o_socket_t *sock, const char *err)
         }
     }
 
+    {  // Begin logged block
     conn->_ostr_final.state = OSTREAM_STATE_DONE;
+    LOG_VAR_INT(conn->_ostr_final.state); // Auto-logged
+    }  // End logged block
 
     if (conn->req.is_tunnel_req) {
         /* We have received a complete request (the end of the request is the request headers, see `fixup_request`), and the
@@ -1039,7 +1059,10 @@ void finalostream_send(h2o_ostream_t *_self, h2o_req_t *_req, h2o_sendvec_t *inb
         conn->req.header_bytes_sent += bufs[bufcnt].len;
         ++bufcnt;
         h2o_probe_log_response(&conn->req, conn->_req_index);
-        conn->_ostr_final.state = OSTREAM_STATE_BODY;
+    {  // Begin logged block
+    conn->_ostr_final.state = OSTREAM_STATE_BODY;
+    LOG_VAR_INT(conn->_ostr_final.state); // Auto-logged
+    }  // End logged block
     }
 
     if (conn->_ostr_final.chunked_buf != NULL)

@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2021 Fastly, Inc.
  *
@@ -72,7 +77,10 @@ int quicly_accept(quicly_conn_t **conn, quicly_context_t *ctx, struct sockaddr *
                   const quicly_cid_plaintext_t *new_cid, ptls_handshake_properties_t *handshake_properties, void *appdata)
 {
     *conn = create_connection(ctx, 0, src_addr, dest_addr);
+    {  // Begin logged block
     (*conn)->super.state = QUICLY_STATE_CONNECTED;
+    LOG_VAR_INT((*conn)->super.state); // Auto-logged
+    }  // End logged block
     return 0;
 }
 
@@ -126,7 +134,10 @@ struct sockaddr *quicly_get_peername(quicly_conn_t *conn)
 
 void quicly_request_stop(quicly_stream_t *stream, int err)
 {
+    {  // Begin logged block
     stream->_send_aux.stop_sending.sender_state = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(stream->_send_aux.stop_sending.sender_state); // Auto-logged
+    }  // End logged block
 }
 
 void quicly_reset_stream(quicly_stream_t *stream, int err)
@@ -134,7 +145,10 @@ void quicly_reset_stream(quicly_stream_t *stream, int err)
     /* dispose sendbuf state */
     quicly_sendstate_reset(&stream->sendstate);
 
+    {  // Begin logged block
     stream->_send_aux.reset_stream.sender_state = QUICLY_SENDER_STATE_SEND;
+    LOG_VAR_INT(stream->_send_aux.reset_stream.sender_state); // Auto-logged
+    }  // End logged block
 
     /* inline expansion of resched_stream_data() */
     /* TODO: consider streams_blocked? */
@@ -309,7 +323,10 @@ int mquicly_closed_by_remote(quicly_conn_t *conn, int err, uint64_t frame_type, 
 {
     /* TODO: invoke conn->super.ctx->closed_by_remote->cb() but h2o does not use it so far */
     assert(conn->super.ctx->closed_by_remote == NULL);
+    {  // Begin logged block
     conn->super.state = QUICLY_STATE_DRAINING;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
     destroy_all_streams(conn, err);
     return 0;
 }
@@ -431,7 +448,10 @@ int quicly_close(quicly_conn_t *conn, int err, const char *reason_phrase)
     if (conn->super.state >= QUICLY_STATE_CLOSING)
         return 0;
 
+    {  // Begin logged block
     conn->super.state = QUICLY_STATE_CLOSING;
+    LOG_VAR_INT(conn->super.state); // Auto-logged
+    }  // End logged block
     return 0;
 }
 

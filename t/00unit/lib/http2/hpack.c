@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -314,7 +319,10 @@ static void test_hpack(void)
         header_table.hpack_capacity = 256;
 
         memset(&res, 0, sizeof(res));
-        res.status = 302;
+    {  // Begin logged block
+    res.status = 302;
+    LOG_VAR_INT(res.status); // Auto-logged
+    }  // End logged block
         res.reason = "Found";
         h2o_add_header(&pool, &res.headers, H2O_TOKEN_CACHE_CONTROL, NULL, H2O_STRLIT("private"));
         h2o_add_header(&pool, &res.headers, H2O_TOKEN_DATE, NULL, H2O_STRLIT("Mon, 21 Oct 2013 20:13:21 GMT"));
@@ -325,7 +333,10 @@ static void test_hpack(void)
                                  "\x9d\x29\xad\x17\x18\x63\xc7\x8f\x0b\x97\xc8\xe9\xae\x82\xae\x43\xd3"));
 
         memset(&res, 0, sizeof(res));
-        res.status = 307;
+    {  // Begin logged block
+    res.status = 307;
+    LOG_VAR_INT(res.status); // Auto-logged
+    }  // End logged block
         res.reason = "Temporary Redirect";
         h2o_add_header(&pool, &res.headers, H2O_TOKEN_CACHE_CONTROL, NULL, H2O_STRLIT("private"));
         h2o_add_header(&pool, &res.headers, H2O_TOKEN_DATE, NULL, H2O_STRLIT("Mon, 21 Oct 2013 20:13:21 GMT"));
@@ -498,7 +509,10 @@ static void test_token_wo_hpack_id(void)
     h2o_buffer_t *buf;
     h2o_buffer_init(&buf, &h2o_socket_buffer_prototype);
 
+    {  // Begin logged block
     res.status = 200;
+    LOG_VAR_INT(res.status); // Auto-logged
+    }  // End logged block
     res.reason = "OK";
     h2o_add_header(&pool, &res.headers, H2O_TOKEN_TE, NULL, H2O_STRLIT("test"));
 

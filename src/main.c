@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Tatsuhiko Kubo,
  *                         Domingo Alvarez Duarte, Nick Desaulniers,
@@ -2365,7 +2370,10 @@ static int open_unix_listener(h2o_configurator_command_t *cmd, yoml_t *node, str
     struct passwd *owner = NULL, pwbuf;
     char pwbuf_buf[65536];
     gid_t owner_gid = -1;
+    {  // Begin logged block
     unsigned mode = UINT_MAX;
+    LOG_VAR_INT(mode); // Auto-logged
+    }  // End logged block
 
     /* obtain owner and permission */
     if (owner_node == NULL && group_node != NULL) {
@@ -3384,13 +3392,22 @@ static int on_config_neverbleed_offload(h2o_configurator_command_t *cmd, h2o_con
 {
     switch (h2o_configurator_get_one_of(cmd, node, "OFF,QAT,QAT-AUTO")) {
     case 0:
-        neverbleed_offload = NEVERBLEED_OFFLOAD_OFF;
+    {  // Begin logged block
+    neverbleed_offload = NEVERBLEED_OFFLOAD_OFF;
+    LOG_VAR_INT(neverbleed_offload); // Auto-logged
+    }  // End logged block
         break;
     case 1:
-        neverbleed_offload = NEVERBLEED_OFFLOAD_QAT_ON;
+    {  // Begin logged block
+    neverbleed_offload = NEVERBLEED_OFFLOAD_QAT_ON;
+    LOG_VAR_INT(neverbleed_offload); // Auto-logged
+    }  // End logged block
         break;
     case 2:
-        neverbleed_offload = NEVERBLEED_OFFLOAD_QAT_AUTO;
+    {  // Begin logged block
+    neverbleed_offload = NEVERBLEED_OFFLOAD_QAT_AUTO;
+    LOG_VAR_INT(neverbleed_offload); // Auto-logged
+    }  // End logged block
         break;
     default:
         h2o_fatal("logic flaw");
@@ -4673,13 +4690,25 @@ int main(int argc, char **argv)
                 break;
             case 'm':
                 if (strcmp(optarg, "worker") == 0) {
-                    conf.run_mode = RUN_MODE_WORKER;
+    {  // Begin logged block
+    conf.run_mode = RUN_MODE_WORKER;
+    LOG_VAR_INT(conf.run_mode); // Auto-logged
+    }  // End logged block
                 } else if (strcmp(optarg, "master") == 0) {
-                    conf.run_mode = RUN_MODE_MASTER;
+    {  // Begin logged block
+    conf.run_mode = RUN_MODE_MASTER;
+    LOG_VAR_INT(conf.run_mode); // Auto-logged
+    }  // End logged block
                 } else if (strcmp(optarg, "daemon") == 0) {
-                    conf.run_mode = RUN_MODE_DAEMON;
+    {  // Begin logged block
+    conf.run_mode = RUN_MODE_DAEMON;
+    LOG_VAR_INT(conf.run_mode); // Auto-logged
+    }  // End logged block
                 } else if (strcmp(optarg, "test") == 0) {
-                    conf.run_mode = RUN_MODE_TEST;
+    {  // Begin logged block
+    conf.run_mode = RUN_MODE_TEST;
+    LOG_VAR_INT(conf.run_mode); // Auto-logged
+    }  // End logged block
                 } else {
                     fprintf(stderr, "unknown mode:%s\n", optarg);
                 }
@@ -4698,7 +4727,10 @@ int main(int argc, char **argv)
                 }
                 break;
             case 't':
-                conf.run_mode = RUN_MODE_TEST;
+    {  // Begin logged block
+    conf.run_mode = RUN_MODE_TEST;
+    LOG_VAR_INT(conf.run_mode); // Auto-logged
+    }  // End logged block
                 break;
             case 'v':
                 printf("h2o version " H2O_VERSION "\n");

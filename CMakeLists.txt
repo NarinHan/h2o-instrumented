@@ -338,6 +338,7 @@ SET(BROTLI_SOURCE_FILES
     lib/handler/compress/brotli.c)
 
 SET(LIB_SOURCE_FILES
+	include/logging.c
     deps/cloexec/cloexec.c
     deps/hiredis/async.c
     deps/hiredis/hiredis.c

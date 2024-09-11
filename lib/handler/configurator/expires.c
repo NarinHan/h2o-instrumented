@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -62,7 +67,10 @@ static int on_config_expires(h2o_configurator_command_t *cmd, h2o_configurator_c
         /* save the value */
         if (*self->args == NULL)
             *self->args = h2o_mem_alloc(sizeof(**self->args));
-        (*self->args)->mode = H2O_EXPIRES_MODE_MAX_AGE;
+    {  // Begin logged block
+    (*self->args)->mode = H2O_EXPIRES_MODE_MAX_AGE;
+    LOG_VAR_INT((*self->args)->mode); // Auto-logged
+    }  // End logged block
         (*self->args)->data.max_age = value;
     } else {
         h2o_configurator_errprintf(cmd, node,

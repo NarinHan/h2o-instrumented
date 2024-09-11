@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /* Extracted from anet.c to work properly with Hiredis error reporting.
  *
  * Copyright (c) 2009-2011, Salvatore Sanfilippo <antirez at gmail dot com>
@@ -426,7 +431,10 @@ static int _redisContextConnectTcp(redisContext *c, const char *addr, int port,
     long timeout_msec = -1;
 
     servinfo = NULL;
+    {  // Begin logged block
     c->connection_type = REDIS_CONN_TCP;
+    LOG_VAR_INT(c->connection_type); // Auto-logged
+    }  // End logged block
     c->tcp.port = port;
 
     /* We need to take possession of the passed parameters
@@ -615,7 +623,10 @@ int redisContextConnectUnix(redisContext *c, const char *path, const struct time
     if (redisSetBlocking(c,0) != REDIS_OK)
         return REDIS_ERR;
 
+    {  // Begin logged block
     c->connection_type = REDIS_CONN_UNIX;
+    LOG_VAR_INT(c->connection_type); // Auto-logged
+    }  // End logged block
     if (c->unix_sock.path != path) {
         hi_free(c->unix_sock.path);
 

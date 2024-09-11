@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** mrdb.c - mruby debugger
 **
@@ -190,8 +195,14 @@ mrb_debug_context_new(mrb_state *mrb)
   static const mrb_debug_context dbg_zero = {0};
 
   *dbg = dbg_zero;
-  dbg->xm = DBG_INIT;
-  dbg->xphase = DBG_PHASE_BEFORE_RUN;
+    {  // Begin logged block
+    dbg->xm = DBG_INIT;
+    LOG_VAR_INT(dbg->xm); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
+    dbg->xphase = DBG_PHASE_BEFORE_RUN;
+    LOG_VAR_INT(dbg->xphase); // Auto-logged
+    }  // End logged block
   dbg->next_bpno = 1;
 
   return dbg;
@@ -566,8 +577,14 @@ mrb_code_fetch_hook(mrb_state *mrb, const mrb_irep *irep, const mrb_code *pc, mr
     dbg->prvfile = NULL;
     dbg->prvline = 0;
     dbg->prvci = NULL;
+    {  // Begin logged block
     dbg->xm = DBG_RUN;
+    LOG_VAR_INT(dbg->xm); // Auto-logged
+    }  // End logged block
+    {  // Begin logged block
     dbg->xphase = DBG_PHASE_RUNNING;
+    LOG_VAR_INT(dbg->xphase); // Auto-logged
+    }  // End logged block
   }
 
   file = mrb_debug_get_filename(mrb, irep, pc - irep->iseq);
@@ -579,7 +596,10 @@ mrb_code_fetch_hook(mrb_state *mrb, const mrb_irep *irep, const mrb_code *pc, mr
       return;
     }
     dbg->method_bpno = 0;
+    {  // Begin logged block
     dbg->bm = BRK_STEP;
+    LOG_VAR_INT(dbg->bm); // Auto-logged
+    }  // End logged block
     break;
 
   case DBG_NEXT:
@@ -591,21 +611,30 @@ mrb_code_fetch_hook(mrb_state *mrb, const mrb_irep *irep, const mrb_code *pc, mr
     }
     dbg->prvci = NULL;
     dbg->method_bpno = 0;
+    {  // Begin logged block
     dbg->bm = BRK_NEXT;
+    LOG_VAR_INT(dbg->bm); // Auto-logged
+    }  // End logged block
     break;
 
   case DBG_RUN:
     bpno = check_method_breakpoint(mrb, irep, pc, regs);
     if (bpno > 0) {
       dbg->stopped_bpno = bpno;
-      dbg->bm = BRK_BREAK;
+    {  // Begin logged block
+    dbg->bm = BRK_BREAK;
+    LOG_VAR_INT(dbg->bm); // Auto-logged
+    }  // End logged block
       break;
     }
     if (dbg->prvfile != file || dbg->prvline != line) {
       bpno = mrb_debug_check_breakpoint_line(mrb, dbg, file, line);
       if (bpno > 0) {
         dbg->stopped_bpno = bpno;
-        dbg->bm = BRK_BREAK;
+    {  // Begin logged block
+    dbg->bm = BRK_BREAK;
+    LOG_VAR_INT(dbg->bm); // Auto-logged
+    }  // End logged block
         break;
       }
     }
@@ -614,7 +643,10 @@ mrb_code_fetch_hook(mrb_state *mrb, const mrb_irep *irep, const mrb_code *pc, mr
     return;
   case DBG_INIT:
     dbg->root_irep = irep;
+    {  // Begin logged block
     dbg->bm = BRK_INIT;
+    LOG_VAR_INT(dbg->bm); // Auto-logged
+    }  // End logged block
     if (!file || line < 0) {
       puts("Cannot get debugging information.");
     }
@@ -632,14 +664,20 @@ mrb_code_fetch_hook(mrb_state *mrb, const mrb_irep *irep, const mrb_code *pc, mr
   }
   dbg->break_hook(mrb, dbg);
 
-  dbg->xphase = DBG_PHASE_RUNNING;
+    {  // Begin logged block
+    dbg->xphase = DBG_PHASE_RUNNING;
+    LOG_VAR_INT(dbg->xphase); // Auto-logged
+    }  // End logged block
 }
 
 static mrdb_exemode
 mrb_debug_break_hook(mrb_state *mrb, mrb_debug_context *dbg)
 {
   debug_command *cmd;
-  dbgcmd_state st = DBGST_CONTINUE;
+    {  // Begin logged block
+    dbgcmd_state st = DBGST_CONTINUE;
+    LOG_VAR_INT(st); // Auto-logged
+    }  // End logged block
   mrdb_state *mrdb = mrdb_state_get(mrb);
 
   print_info_stopped(mrb, mrdb);
@@ -688,12 +726,21 @@ main(int argc, char **argv)
   mrdb->srcpath = args.srcpath;
 
   if (mrdb->dbg->xm == DBG_QUIT) {
+    {  // Begin logged block
     mrdb->dbg->xphase = DBG_PHASE_RESTART;
+    LOG_VAR_INT(mrdb->dbg->xphase); // Auto-logged
+    }  // End logged block
   }
   else {
+    {  // Begin logged block
     mrdb->dbg->xphase = DBG_PHASE_BEFORE_RUN;
+    LOG_VAR_INT(mrdb->dbg->xphase); // Auto-logged
+    }  // End logged block
   }
-  mrdb->dbg->xm = DBG_INIT;
+    {  // Begin logged block
+    mrdb->dbg->xm = DBG_INIT;
+    LOG_VAR_INT(mrdb->dbg->xm); // Auto-logged
+    }  // End logged block
   mrdb->dbg->ccnt = 1;
 
   /* setup hook functions */
@@ -732,7 +779,10 @@ main(int argc, char **argv)
     }
   }
   puts("mruby application exited.");
-  mrdb->dbg->xphase = DBG_PHASE_AFTER_RUN;
+    {  // Begin logged block
+    mrdb->dbg->xphase = DBG_PHASE_AFTER_RUN;
+    LOG_VAR_INT(mrdb->dbg->xphase); // Auto-logged
+    }  // End logged block
   if (!mrb_undef_p(v)) {
     if (mrb->exc) {
       mrb_print_error(mrb);

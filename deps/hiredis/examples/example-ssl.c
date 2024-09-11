@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +17,10 @@
 int main(int argc, char **argv) {
     unsigned int j;
     redisSSLContext *ssl;
+    {  // Begin logged block
     redisSSLContextError ssl_error = REDIS_SSL_CTX_NONE;
+    LOG_VAR_INT(ssl_error); // Auto-logged
+    }  // End logged block
     redisContext *c;
     redisReply *reply;
     if (argc < 4) {

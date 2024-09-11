@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014-2016 DeNA Co., Ltd., Kazuho Oku, Tatsuhiro Tsujikawa
  *
@@ -869,7 +874,10 @@ void h2o_send_informational(h2o_req_t *req)
 
 Clear:
     /* clear status and headers */
+    {  // Begin logged block
     req->res.status = 0;
+    LOG_VAR_INT(req->res.status); // Auto-logged
+    }  // End logged block
     req->res.headers = (h2o_headers_t){NULL, 0, 0};
 }
 

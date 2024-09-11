@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2014 DeNA Co., Ltd.
  *
@@ -45,7 +50,10 @@ h2o_http2_stream_t *h2o_http2_stream_open(h2o_http2_conn_t *conn, uint32_t strea
     stream->_ostr_final.send_informational =
         conn->super.ctx->globalconf->send_informational_mode == H2O_SEND_INFORMATIONAL_MODE_NONE ? NULL
                                                                                                  : finalostream_send_informational;
+    {  // Begin logged block
     stream->state = H2O_HTTP2_STREAM_STATE_IDLE;
+    LOG_VAR_INT(stream->state); // Auto-logged
+    }  // End logged block
     h2o_http2_window_init(&stream->output_window, conn->peer_settings.initial_window_size);
     h2o_http2_window_init(&stream->input_window.window, H2O_HTTP2_SETTINGS_HOST_STREAM_INITIAL_WINDOW_SIZE);
     stream->received_priority = *received_priority;
@@ -173,7 +181,10 @@ static h2o_sendvec_t *send_data(h2o_http2_conn_t *conn, h2o_http2_stream_t *stre
     if (dst.len != max_payload_size || !h2o_send_state_is_in_progress(send_state)) {
         size_t payload_len = max_payload_size - dst.len;
         if (bufcnt != 0) {
-            send_state = H2O_SEND_STATE_IN_PROGRESS;
+    {  // Begin logged block
+    send_state = H2O_SEND_STATE_IN_PROGRESS;
+    LOG_VAR_INT(send_state); // Auto-logged
+    }  // End logged block
         }
         commit_data_header(conn, stream, &conn->_write.buf, payload_len, send_state);
     }
@@ -413,7 +424,10 @@ void h2o_http2_stream_send_pending_data(h2o_http2_conn_t *conn, h2o_http2_stream
     if (nextbuf == NULL && stream->_data.entries != NULL) {
         /* error */
         stream->_data.size = 0;
-        stream->send_state = H2O_SEND_STATE_ERROR;
+    {  // Begin logged block
+    stream->send_state = H2O_SEND_STATE_ERROR;
+    LOG_VAR_INT(stream->send_state); // Auto-logged
+    }  // End logged block
         h2o_http2_stream_set_state(conn, stream, H2O_HTTP2_STREAM_STATE_END_STREAM);
     } else if (nextbuf == stream->_data.entries + stream->_data.size) {
         /* sent all data */

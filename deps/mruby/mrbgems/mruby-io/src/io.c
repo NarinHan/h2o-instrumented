@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
 ** io.c - IO class
 */
@@ -841,7 +846,10 @@ mrb_io_s_for_fd(mrb_state *mrb, mrb_value klass)
   mrb_value obj;
 
   /* copied from mrb_instance_alloc() */
-  if (ttype == 0) ttype = MRB_TT_OBJECT;
+    {  // Begin logged block
+    if (ttype == 0) ttype = MRB_TT_OBJECT;
+    LOG_VAR_INT(ttype); // Auto-logged
+    }  // End logged block
   obj = mrb_obj_value((struct RObject*)mrb_obj_alloc(mrb, ttype, c));
   return mrb_io_initialize(mrb, obj);
 }

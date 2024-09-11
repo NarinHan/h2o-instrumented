@@ -1,3 +1,8 @@
+#ifndef LOGGING_H
+#define LOGGING_H
+#include "logging.h"
+#endif
+
 /*
  * Copyright (c) 2009-2014 Kazuho Oku, Tokuhiro Matsuno, Daisuke Murase,
  *                         Shigeo Mitsunari
@@ -479,7 +484,10 @@ int phr_parse_response(const char *buf_start, size_t len, int *minor_version, in
     int r;
 
     *minor_version = -1;
+    {  // Begin logged block
     *status = 0;
+    LOG_VAR_INT(*status); // Auto-logged
+    }  // End logged block
     *msg = NULL;
     *msg_len = 0;
     *num_headers = 0;
